@@ -1,0 +1,611 @@
+:: CScript
+    <center><h1>ChoiceScript to SugarCube/Twee Conversion in Tweego
+    Table of Content</h1></center>
+    The information in the pages below have been taken from the [[ChoiceScript Wiki|https://choicescriptdev.fandom.com/wiki/Structure_of_a_ChoiceScript_game]] and translated for use of the SugarCube/Twee format with the Tweego Compiler*. 
+    
+    If I am missing an important aspect of CScript which should be translated into Twine, please let me know!
+
+    > <<link "Difference in Game Folders" "Folder">><</link>>
+    > <<link "Startup.txt for Tweego, Stats and Achievements" "Startup">><</link>>
+    > <<link "Notes on Achievements" "Achievements">><</link>>
+    > <<link "Scenes and Passages" "Scenes">><</link>>
+    > <<link "Letting the Player Save" "Saving">><</link>>
+    
+    > <<link "Variable types and Setting them" "CSVariable">><</link>>
+    > <<link "Input Macros" "Input">><</link>>
+    > <<link "Displaying Variables" "PrintV">><</link>>
+
+    > <<link "Conditional Statements" "IfElse">><</link>>
+    > <<link "Choices and Passages" "Choices">><</link>>
+    > <<link "*goto and Calling Scenes" "GoTo">><</link>>
+    > <<link "Ending Page" "Ending">><</link>>
+
+    > <<link "Formatting your Text" "Formatting">><</link>>
+    > <<link "Miscellaneous" "Miscellaneous">><</link>>
+    > <<link "Useful Templates and Documentation" "Templates">><</link>>
+    
+    > [[Start Menu|Start]] <
+    
+    *''Note'': Most can be applied to using SugarCube in the Twine app as well. The main difference is the use of the Twee Notation. See the [[Tweego Guide|Tweego]] for more information.
+
+:: Folder [cscript]
+    <center><h1>Difference in Game Folders</h1></center>
+    Unlike CScript, Twine/Tweego has four important files (can actually be reduced to 2) located in 2 separate folders:
+    <ul>
+        <li><nowiki>.tw</nowiki>: the base code of your game in the Twee format.</li>
+        <li><nowiki>.js</nowiki>: the JavaScript code (which can be included in the <nowiki>.tw</nowiki> file as a Passage with a [[Special Tag|Tags]])</li>
+        <li><nowiki>.css</nowiki>: the CSS code (which can be included in the <nowiki>.tw</nowiki> file as a Passage with a [[Special Tag|Tags]])</li>
+        <li><nowiki>.html</nowiki>: the compiled output, the only important file when publishing the project (and assets, if you have some)</li>
+    </ul>
+    When using Tweego, the first 3 need to be in the <nowiki> src </nowiki> folder, while the last one appears in the <nowiki> export </nowiki> folder when compiled (See [[Compiling]]). 
+    
+    You can add as many <nowiki>.tw</nowiki> files as you want. Tweego will compile everything at the end. For example, this HTML file is compiled of 4 <nowiki>.tw</nowiki> files.
+    
+    ''Note:'' In the Twine App, the system will compile your project to an HTML file as you edit it. The JavaScript and CSS have their own special window you can make your edits.
+
+:: Startup [cscript]
+    <<code>><center><h1>Startup.txt for Tweego</h1></center>
+    As with CScript, Tweego needs specific items to compile your code into a working file. However, the some of required information is different (see code below or [[the Tweego Guide|Base]] for more details).
+
+    Tweego does not need a Scene List, as it compiles the passages and the links betweent them automatically. The Author's Name is optional but can be added with a [[Special Passage|Passages]]. You can also [[create variables at setup|Variable]] (advised for longer projects).
+
+    ''But'' you will need to indicate a Title for your project, some data about the coding format and version (like SugarCube and version 2.36.1) and the [[IFID|Base]]. And you will need at least the starting passage (always named Start in Tweego).
+
+    <h3>CScript</h3>\
+    <code>*title My First ChoiceScript Game
+    *author Jane Doe
+    *scene_list
+    _ _startup
+    _ _chapter1
+    *create name "Unknown"
+    *create gold 0
+    *create backpack false</code>
+    <h3>Tweego</h3>\
+    <code>:: StoryTitle
+    The title of your game
+
+    :: StoryData
+    {
+    "ifid": "C15CE33F-61F6-4909-BB59-73EE7A3D57B1", 
+    "format": "SugarCube",
+    "format-version": "2.36.1",
+    "start": "Start"
+    }
+
+    :: Start
+    Your first passage [it can have whatever text/code you want, this is just a place holder]</code>\
+    For more information on setting up your first project, see [[this page|Base]].
+
+    ''Note:'' The Twine App set this up automatically when you create a new project.
+
+    <h3>Notes on Saves, Stats Page and Achievements</h3>\
+    Unlike CScript, Twine (SugarCube) has a built-in Save System, where players can save their playthrough in their browser's cache or download it as a file. I go in more detail about the save System in [[this page|Saving]].
+
+    However, Twine does not have a built-in system for Stats and Achievements. You will need to set it up with an extra passage and some extra code (JavaScript, CSS and/pr SugarCube macros). For each, there are different ways to include them in your project. You can read more about the [[Stats Page here|Scenes]] and how to set up [[Achievements here|Achievements]]. 
+
+:: Scenes [cscript]
+    <<code>><center><h1>Scenes (CScript) and Passages (Twine)</h1></center>
+    <h2>Base Scenes:</h2>\
+    You have some differences between Scenes and Passages, how they are set and how they work. Scenes in CScript refers to the story data (narrative and in-text code), while Passages in Twine refer to every "block" created, whether it is narrative scene with code, edting the UI (see [[Special Passages|Menu]]) or pure JS/CSS code (See [[Tags]]).
+    
+    Secondly, unlike CScript, Twine (and especially Twee) is not bound to indentation for the code to work. It can be useful to organise it however (especially with more complex code) but it is not necessary. The code is either bound to the HTML markup (<nowiki> < > </nowiki>) or the macros markup (<nowiki> << >> </nowiki>). However, adding a choice or page break in passages (<nowiki> <<link>> </nowiki> macro in Twine) will usually mean creating a new passage.
+
+    CScript: <code>Lorem Ipsum
+        *choice
+        _ _ #choice 1
+        _ _ _ _ Lorem Ipsum 2
+        _ _ #choice 2
+        _ _ _ _ Other Text</code>
+    Twee: <code>:: Start
+    Lorem Ipsum
+    <nowiki><<link "Choice 1" "Next">><</link>></nowiki>
+    <nowiki><<link "Choice 2" "Variant">><</link>></nowiki>
+    
+    :: Next
+    Lorem Ipsum 2
+    
+    :: Variant
+    Other Text</code>\
+
+    Another important thing to remember is that when Tweego compiles your files, it will automatically find the links between each story Passages (scenes) through the <nowiki><<link>></nowiki> or <nowiki><<goto>></nowiki> macros, even if they are not in order or in the same <nowiki> .tw </nowiki> file. You can place your Passages in any order or in any <nowiki> .tw </nowiki> file you want (for example, the organisation of the passages behind this compiled file).
+    ''Note:'' the Twine App has a visual map that lets you organise each passage with a click. The T3LT extension for VSCode has a similar function.
+
+    However, CScript and the Twee/Twine logic and notation is very similar when it comes to coding. Many in-text code has a similarly named Twine equivalent in a slightly different formatting. For example when it comes to [[conditional statements|IfElse]]: 
+    CScript: <nowiki> *if </nowiki>
+    Twee: <nowiki> <<if>><</if>> </nowiki>
+
+    As well, the formatting of [[Passages]] name is very similar to the ones of Scenes (save for punctuation), with their name also being case-sensitive.
+    CScript: <nowiki> *label PassageName</nowiki>
+    Twee: <nowiki>:: PassageName </nowiki>
+
+    <h2>Statistics Page:</h2>\
+    While you do not need a separate file for the game's statistics, as it can be a regular Passage in any of your <nowiki> .tw </nowiki> files, the coding of the Statistics Page in Twine can be considered more obtuse than in CScript. The Stats bars are not included in any base Twine formats and requires an addition of code in JavaScript, CSS and in-text Code (often HTML and/or widgets). 
+    
+    There are however many templates out-there to create Stats Bar, each having different approach to its visual and the code behind. You can browse and choose which one fits your project the best, and just Copy-Paste the relevant code in your own file. You can find all the ones I know of in the [[Template and Documentation Page|Templates]].
+
+    <h3>Note on Fairmath and Arithmetic operators</h3>
+    Since Twine is based on JavaScript, you can use any Arithmetic operators based on JavaScript to change the value of variables. You can find the base operators [[here|http://www.motoslave.net/sugarcube/2/docs/#macros-macro-set]] as well as the Math functions [[here|http://www.motoslave.net/sugarcube/2/docs/#methods-math]].
+
+    While Twine does not have Fairmath as a function, it can emulate it with some extra JavaScript code/widget (as explained in [[the Twine Cookbook|https://twinery.org/cookbook/fairmath/sugarcube/sugarcube_fairmath.html]]). You can also find personalised macros and templates including similar code in the [[Template Page|Templates]]
+
+:: CSVariable [cscript]
+    <<code>><center><h1>Variable types and Setting them</h1></center>
+    Betweent the two systems, the base use of variables are almost identical: both have temporary and permanent variables working in a similar fashion (with the first disappearing when moving to another scene and the other staying in memory throughout the game); with both, variables can be numerical, strings, or boolean; and the variable names are case-sensitive.
+
+    The most obvious difference is when/how variables are set and how variables are formatted. Twine/Twee uses one setting macro <nowiki><<set>></nowiki> for all types of variables, wherever in the game AND when the value of a variable needs to be modified. Moreover, the macro can set multiple variables (and multiple types) in one single command.
+    Example: <nowiki><<set $variable to true, _variable to 3, setup.variable to "Henry">></nowiki>
+
+    When it comes to naming variables, Twine/Twee only uses basic alphabetical (a to z, A to Z) and numberal characters. It will not accept punctuation or special characters as part of the name. Underscores are used as the starting point for temporary variables, the dollar sign for permanent variables, and the dot for JavaScript variables, objects and JavaScript functions. 
+    \
+    <h2>Setting Variables</h2>\
+    <h3>Temporary Variables</h3>\
+    Like in CScript, you can create a temporary variable, set a value (and change its value) and let it disappear when moving to another Passage (it unsets automatically). In Twine/Twee, you start naming the variable with an underscore.
+
+    Temporary variables are really useful in choices where the player does not change passages, making quick calculations (like an RNG check), and in widgets.
+
+    CScript: <code> *temp var 3 | *temp var false | *temp var "Henry"
+    *set var +3</code>\
+    Twee: <code><nowiki><<set _temp to 3, _temp2 to false, _temp3 to "Henry">></nowiki> 
+    <nowiki><<set _temp += 3>></nowiki></code>\
+    
+    <h3>Permanent Variables</h3>\
+    The main difference between CScript and Twine/Twee is that you are not required to declare those variables at startup (though it is recommended for larger projects, see this [[Special Passage|Variable]] setup). You can create them at any point during the story and unset them whenever you want. A permanent variable starts with a dollar sign.
+
+    CScript: <code> *create number 3 | *create test false | *create name "Henry" 
+    *set number +3 </code>\
+    Twee: <code><nowiki><<set $number to 3, $test to false, $name to "Henry">></nowiki> 
+    <nowiki><<set $number += 3>></nowiki></code>\
+    ''Note:'' For larger games, it is not recommended to have too many permanent variables being tracked at the same time. To reduce the use of lag, it is best to nest variables in objects or arrays, set them in JavaScript, use temporary variables or other [[Sugarcube functions|https://www.motoslave.net/sugarcube/2/docs/#functions]].
+    <h3>SUPER-Permanent Variables</h3>\
+    Since Twine is based on JavaScript, you can set "JavaScript" variables. These are useful to reduce the loading time and lag and set <u>items that will not change</u> throughtout the game (ex: an item price). It is best used in the {{{StoryInit}}} Special passage or in the JavaScript file.
+
+    Twee: <code><nowiki><<set setup.number to 3, setup.test to false, setup.name to "Henry">></nowiki></code>\
+    ''Note:'' Since those variables are based on JavaScript, printing them on the screen will be slightly different to regular variables (see [[this page|PrintV]]). 
+    <h3>Super-EXTRA Variables</h3>\
+    Since Twine is based on JavaScript is it much easier to create and use objects and arrays** as either temporary or permanent variables. Objects (<nowiki> object.{} </nowiki>) are a collection of other variables, they are very useful to group variables of a certain use (ex: pronouns, player appearance, etc...). On the other hand, arrays (<nowiki> array.[] </nowiki>) are ordered series of strings, numbericals, boolean values or other variables/objects. They can be used for many things, like inventory or lists.
+    
+    Object: <code><nowiki><<set $object to {"name" : "Henry", "number" : 3, "test" : false}>> OR <<set $object to {}, $object.name to "Henry", $object.number to 3, $object.test to false>></nowiki></code>\
+    Array: <code><nowiki><<set $array to ["Apple", "Blueberry", 4, false]>></nowiki></code>\
+    ''Note:'' If objects and arrays are set with JavaScript (setup.) they can't be edited, only unset.
+    ** Note on arrays: As of September 2022, CScript has special commands for [[creating/setting/deleting arrays|https://forum.choiceofgames.com/t/new-in-choicescript-create-array-temp-array-commands-page-break-advertisement/124442/1]].
+    <h2>Unsetting Variables:</h2>\
+    Since temporary variables are automatically deleted when passages change, there is no need to unset those. However, it can be usefull to unset permanent variables when those are not necessary anymore. Like with the <nowiki><<set>></nowiki> macro, the <nowiki><<unset>></nowiki> one can unset multiple variables in one go.
+
+    CScript: <code> *delete number | *delete test | *delete name "Henry"</code>\
+    Twee: <code><nowiki><<unset $number, $test, $name>></nowiki></code>\
+    ''Note:'' For object variables, it is best to use <nowiki><<run delete $object.name>></nowiki> instead of <nowiki><<unset>></nowiki>, especially if other variables inside the object are still defined.
+
+    ''Note:'' For all possible ways to change a variable's value, see the [[SugarCube documentation|http://www.motoslave.net/sugarcube/2/docs/#macros-macro-set]]
+:: PrintV [cscript]
+    <<code>><center><h1>Displaying Variables</h1></center>
+    Displaying variables in Twine/Twee is not as straightforward as in CScript, as it will depend on the type of variable.
+    \
+    <h2>Basic Display</h2>\
+    CScript:<code>${var}</code>
+    Twee:<code>_temp : will display the value of _temp
+    $variable : will display the value of $variable
+    $object.name : will display the value of "name" inside the object.
+    $array.[0] : will display the first item in the array.
+    <nowiki><<print setup.variable>> or <<= setup.variable>></nowiki>: will display JS variables.
+    </code>\
+    ''Note:'' <nowiki><<print>></nowiki> and <nowiki><<= >></nowiki> will also work for the other variables. For arrays, counting items starts at 0, with 0 being the first item (unlike CScript, which starts at 1).
+    <h2>Function Display</h2>\
+    To capitalise a variable or display it in uppercase or lowercase, Twine/Twee will use a Function (a JavaScript function). as such, you will need to use <nowiki><<print>></nowiki> or <nowiki><<= >></nowiki>.
+    CScript:<code>$!{var} for Capitalisation, $!!{var} for Uppercase</code>
+    Twee:<code><nowiki><<print $test.toUpperFirst()>> or <<= $test.toUpperFirst()>></nowiki>: will display the variable capitalised
+    <nowiki><<print $test.toUpperCase()>> or <<= $test.toUpperCase()>></nowiki>: will display the variable in uppercase.
+    <nowiki><<print $test.toLowerCase()>> or <<= $test.toLowerCase()>></nowiki>: will display the variable in lowercase.</code>\
+    ''Note:'' You can also use those JavaScript functions to set a variable or change its value (ex: <nowiki><<set $variable to $test.toLowerCase()>></nowiki> )
+    <h2>Extract Letter</h2>\
+    If you wish to, you can also extract a letter from a string. This is also done with a JavaScript function in Twine/Twee.
+    CScript: <code>${word#1}</code>\
+    Twee: <code><nowiki><<= $word.charAt(0)>></nowiki></code>\
+    ''Note:'' In JavaScript, counting items starts at 0, with 0 being the first item.
+    
+    If you want to display the last letter of a variable but you don't know how long the value is you can use:
+    CScript: <code>${word#length(word)}</code>\
+    Twee: <code><nowiki><<print $word.charAt($word.length - 1)>></nowiki></code>\
+
+:: IfElse [cscript]
+    <<code>><center><h1>Conditional Statements</h1></center>
+    The use of conditional statements between CScript and Twine/Twee are very similar and even use the same logic. A major difference is in their use, with Twine being able to check whether a variable is true or not regardless of its value (even if it is not a boolean).
+
+    Twine/Twee can use both TwineScript and JavaScript when coding conditional statements. For a non-exhaustive list, see the [[SugarCube documentation|http://www.motoslave.net/sugarcube/2/docs/#macros-macro-if]].
+
+    Inside <nowiki><<if>></nowiki> macros, you can set/change/unset variables, show a specific text, run some code, make a choice available, a link to another passage, etc...
+
+    Like most macros in SugarCube, you will need to include the closing markup for the macro to work, here <nowiki><</if>></nowiki>. If you do not, you will get an error on the page when testing it.
+    <h2>Comparing Variables</h2>\
+    ''Basic Comparison''
+    CScript:<code>*if (var1 = var2)</code>\
+    Twine/Twee:<code><nowiki><<if $var1 === $var2>><</if>> or <<if $var1 is $var2>><</if>></nowiki></code>\
+    CScript:<code>*if var1 != var2</code>\
+    Twine/Twee:<code><nowiki><<if $var1 !== $var2>><</if>> or <<if $var1 isnot $var2>><</if>></nowiki></code>
+    ''Greater/Lower than''
+    CScript:<code>*if var1 < var2 | *if var1 <= var2</code>\
+    Twine/Twee:<code><nowiki><<if $var1 < $var2>><</if>> or <<if $var1 lt $var2>><</if>></nowiki>
+    <nowiki><<if $var1 <= $var2>><</if>> or <<if $var1 lte $var2>><</if>></nowiki></code>\
+    CScript:<code>*if var1 > var2 | *if var1 >= var2 |</code>\
+    Twine/Twee:<code><nowiki><<if $var1 > $var2>><</if>> or <<if $var1 gt $var2>><</if>></nowiki>
+    <nowiki><<if $var1 >= $var2>><</if>> or <<if $var1 gte $var2>><</if>></nowiki></code>
+    ''Boolean''
+    CScript:<code>*if var1 | *if not (var2)</code>\
+    Twine/Twee:<code><nowiki><<if $var1 is true>><</if>> | <<if $var1 isnot true>><</if>></nowiki></code>
+    ''String:''
+    CScript:<code>*if (name = "Henry")</code>\
+    Twine/Twee:<code><nowiki><<if $name is "Henry">><</if>></nowiki></code>
+    ''Defined''
+    You can also check in Twine/Twee whether a variable is defined or not.
+    Twine/Twee:<code><nowiki><<if def $name>><</if>> | <<if ndef $name>><</if>></nowiki></code>\
+    <h2>And/Or/Not</h2>\
+    CScript:<code>*if (var1 < 10) and (var2 <= 4)</code>\
+    Twine/Twee:<code><nowiki><<if $var1 lt 10 and $var2 lte 4>><</if>> or <<if $var1 < 10 && $var2 <= 4 >><</if>></nowiki></code>\
+    CScript:<code>*if (var1 < 10) or (var2 <= 4)</code>\
+    Twine/Twee:<code><nowiki><<if $var1 lt 10 or $var2 lte 4>><</if>> or <<if $var1 < 10 || $var2 <= 4 >><</if>></nowiki></code>\
+    ''Note:'' For more complex conditional statement, it might be wiser to nest <nowiki><<if>></nowiki> macros inside another <nowiki><<if>></nowiki> or use the <nowiki><<for>></nowiki> macro.
+    <h2>Else/Elseif:</h2>\
+    As with CScript, Twine/Twee's else/elseif works the same way.
+    CScript:<code>*if (var < 30)
+    _ _text
+    *elseif (var < 60)
+    _ _text.
+    *else
+    _ _text!</code>
+    Twine/Twee:<code><nowiki><<if $var < 30>> text <<elseif $var < 60>> text. <<else>> text! <</if>></nowiki></code>\
+
+    ''Note:'' the <nowiki><<if>></nowiki> macro works like the Multireplace CScript code, since you are not forced to the whole code. Another way of doing Multireplace would be using the <nowiki><<switch>></nowiki> macros. More on that [[here|Miscellaneous]]. 
+
+:: Ending [cscript]
+    <<code>><center><h1>Ending Page</h1></center>
+    Twine/Twee does not have a function that ends a game like CScript *ending. Instead, you need create an "End" Page and send the player there (via a <nowiki><<link>></nowiki>).
+
+    However, this way allows you more way to customise the "End" Scene how ever you would want. You are not bound to the 4 CScript option or base text. 
+
+    <h2>Restart the Game</h2>\
+    There are two ways you can send player back to the start: force the game to restart or send the player back to the first page. The first one is similar to the ChoiceScript version, while the second is more often used as a NewGame+ option.
+
+    Whether to choose the first or second option depends on how you code the rest of the game. If your game's code relies on functions like <nowiki> hasVisited() </nowiki>, it is best to use the first option.
+
+    Twee:<code><nowiki><<link "Restart">><<script>>UI.restart();<</script>><</link>></nowiki>
+    <nowiki><<link "Restart" "Start">><</link>></nowiki></code>\
+    ''Note:'' You can replace the link for a button if you want.
+
+    <h2>Share the Game</h2>\
+    Twine/Twee does not have specific script to share the game to other websites, but you are free to add as many hyperlinks as you want (see [[Formatting]]).
+
+:: Saving [cscript]
+    <<code>><center><h1>Letting the Player Save</h1></center>
+    Twine/Twee (for SugarCube) has a built-in save function which allows the player 8 save slots in their browser cache and an infinite amount by Saving to Disk, via the Save Menu. The Saving function can be edited via the [[JavaScript sheet|Tags]], enabling autosave and autoname or changing the amount of save-slots.
+
+    The Save will save the information about the player history (which passage visited) and the value of set variables or other metadata.
+
+    ''Note:'' Savefiles can be broken if the game has been updated in significan ways (ex: introducing new variables in the StoryInit passage or change the name of Passages).
+    ''Note 2:'' Since a playthrough is saved in a browser cache, deleting said cache will delete the save. If the player has not enabled cookies/cache, it will send the player an error or may not load the file properly.
+
+:: Miscellaneous [cscript]
+    <<code>><center><h1>Miscellaneous</h1></center>
+    Here, you will find other CScript commands I did not know where to place.
+
+    <h2>Invisible Comment</h2>\
+    CScript: <code>*comment a comment not seen by players</code>\
+    Twee: <code>/*a comment not seen by players */ -> CSS format
+    <!--a comment not seen by players --> -> HTML format</code>\
+
+    <h2>Script and JavaScript</h2>\
+    There are 2 ways of introducing JavaScript to the game: via the [[JavaScript file or Passage|Tags]] or in-passage with the <nowiki> <<script>><</script>> </nowiki> macro. 
+    
+    Both requires some knowledge of JavaScript (or know what to copy from tutorials).
+
+    <h2>Bug Function</h2>\
+    Unlike CScript, Twine does not have a built-in Quick/Random test. There does not seem to be an add-on to do it automatically either. You would need to manually test the game yourself (or have playtesters) to find whether your game is coded properly.
+
+    However, if a macro is not set properly, the played file will show an error on the passage in which the macro is coded and why the macro is not working (ex: missing closing tag, wrong format, etc...). There is also a Debug version where you can play through your project and see whether variables are set in the right place or if conditional statements show the correct text. You can find the Debug version of this file in the export folder and how to create a Debug vergion [[here|Compiling]].
+
+    If you want to avoid some errors with macros not set properly, I recommend using the T3LT extension in VSCode, which will show you whether Passages have the proper Twee notation, whether a Passage exists when setting a <nowiki><<link>></nowiki> or use <nowiki><<goto>></nowiki>, or whether a macro is properly closed or has all basic elements to function.
+
+    <h2>Combining Variables</h2>\
+    CScript: <code>*set firstname "Roger"
+    *set lastname "Davis"
+    *set fullname (firstname&" ")&lastname</code>\
+    Twee: <code><nowiki><<set $firstname to "Roger">></nowiki>
+    <nowiki><<set $lastname to "Davis">></nowiki>
+    <nowiki><<set $fullname to $firstname + " " + $lastname>></nowiki></code>\
+
+    <h2>Set Random Number</h2>
+    CScript: <code>*temp dieroll 0
+    *rand dieroll 0 7</code>\
+    Twee: <code><nowiki><<set _temp to random(0, 7)>></nowiki></code>\
+
+    <h2>The Switch Macro</h2>\
+    The <nowiki><<switch>></nowiki> macro works with the same logic as the <nowiki><<if>></nowiki>, but focuses <u>only</u> on ONE variable. The macro will check whether variable in question has a value fitting the coded <nowiki><<case>></nowiki> before displaying the corresponding text (if it cannot find one, it will show the text in the <nowiki><<default>></nowiki> case). It is probably the closest equivalent to the Multireplace command in CScript, though you will need to define at least one case.
+
+    You can use this macro to display variation of text following a choice in the previous passage or a variable's value. But, the <nowiki><<switch>></nowiki> macro is most useful in reducing the amount of named passages. One can combine smaller scenes without choices (only with a Continue/Next link) into one Passage.
+    
+    ''Choice/Variable dependent display:'' <code>:: Passage 1
+    <nowiki><<links "Choice 1" "PassageName">><<set $variable to "ok">><</link>></nowiki>
+    <nowiki><<links "Choice 2" "PassageName">><<set $variable to 1>><</link>></nowiki>
+        <nowiki><<links "Choice 3" "PassageName">><<set $variable to false>><</link>></nowiki>
+    :: PassageName
+    <nowiki><<switch $variable>><<case 1>></nowiki>
+    _ _ Variation 1
+    <nowiki><<case false>></nowiki>
+    _ _ Variation 2
+    <nowiki><<default>></nowiki>
+    _ _ Variation 3
+    <nowiki><</switch>></nowiki></code>\
+    ''Note:'' the example above would be the closest to Multireplace.
+
+    ''Combining smaller passages:''<code>:: Passage 2
+    <nowiki><<if ndef $text>><<set $text to 1>><</if>></nowiki>
+    <nowiki><<switch $text>><<case 1>></nowiki>
+    _ _ First part of the story
+    <nowiki><<link "Next" `passage()`>><<set $text +=1>><</link>></nowiki>
+    <nowiki><<case 2>></nowiki>
+    _ _ Second part of the story
+    <nowiki><<link "Next" `passage()`>><<set $text +=1>><</link>></nowiki>
+    <nowiki><<default>></nowiki>
+    _ _ Last part of the story
+    <nowiki><<link "Next" "PassageName">><<unset $text>><</link>></nowiki>
+    <nowiki><</switch>></nowiki></code>\
+    ''Note:'' <nowiki>`passage()`</nowiki> in the link will tell the system to go again in that passage (:: Passage 2, here), but to include all changed values of variable (here, the value of $text in the link). However, it is recommended to use {{{<<link "Next" >><<replace '.passage'>><<include `passage()`>><</replace>><<set $text +=1>><</link>>}}} instead.
+
+:: Achievements [cscript]
+    <<code>><center><h1>Notes on Achievements</h1></center>
+    While Twine does not have special functions around Achievements, it is still possible to create an Achievement System in a project. There are multiple ways of doing so: I will show here the variable and metadata version. It is also possible to create more complicated Widgets or JavaScript version.
+
+    <h2>Variable Achievements</h2>\
+    This is probably the most basic way of creating achievements. You can create a permanent variable for each achievement, an object or array including all achievements.
+
+    You would usually set the achivement on the passage where the content of the achievement would happen.
+
+    ''Permanent Variables:''
+    <code>:: Passage
+    <nowiki><<set $achiv1 to true>></nowiki>
+    
+    :: Achievement
+    <nowiki><<if $achiv1 is true>>Achievement One Earned<</if>></nowiki></code>
+    ''Object Variables:''
+    <code>:: StoryInit
+    <nowiki><<set $achiv to {}>></nowiki>
+    
+    :: Passage
+    <nowiki><<set $achiv.one to true>></nowiki>
+    
+    :: Achievement
+    <nowiki><<if $achiv.one is true>>Achievement One Earned<</if>></nowiki></code>
+    ''Array Variables:''
+    <code>:: StoryInit
+    <nowiki><<set $achiv to []>></nowiki>
+    
+    :: Passage
+    <nowiki><<set $achiv.push("one")>></nowiki>
+
+    :: Achievement
+    <nowiki><<if $achiv.includes("one")>>Achievement One Earned<</if>></nowiki></code>\
+
+    <h2>Memorize and MetaData</h2>\
+    Instead of creating variables, you can rely on the JavaScript aspect of Twine and save the achievements in the metadata of the savefile.
+
+    ''Memorize and Recall''
+    <code>:: Passage
+    <nowiki><<run memorize("achiv1", true)>></nowiki>
+    
+    :: Achievement
+    <nowiki><<if recall("achiv1") is true>>Achievement One Earned<</if>></nowiki></code>
+
+    ''State.Metadata:''
+    <code>:: Passage
+    <nowiki><<run State.metadata.set("achiv1", true)>></nowiki>
+
+    :: Achievement
+    <nowiki><<if State.metadata.get("achiv1") == true>>Achievement One Earned<</if>></nowiki></code>
+    
+    ''Note:'' using MetaData will affect any playthrough in the player's device, while variables will only affect the current save.
+
+:: Choices [cscript]
+    <<code>><center><h1>Choices and Passages</h1></center>
+    As mentioned in [[this page|Scenes]], the structure of choices are a bit different between both systems. While there is a way to mimic CScript choice indent structure (see below), it is not recommended to use this function indefinitely. Instead, it is best to create a new passage after a choice or a page break. You do so in Twine/Twee by creating a link.
+
+    <h2>Choices and Fake Choices</h2>\
+    Twine/Twee does not make a difference between a real choice and a fake choice in coding. The main differences are: whether you include a change of variable, widget or other kind of code, inside the link; and not needed functions like *finish or *ending or *goto.
+
+    CScript: <code>*choice
+    _ _#choice1
+    _ _ _ _ Text
+    _ _ _ _ *goto PassageName
+    _ _#choice1
+    _ _ _ _ *set variable +1
+    _ _ _ _ Different Text
+    _ _ _ _ *goto PassageName</code>
+    Twee:<code><nowiki><<links "Choice 1" "PassageName">><</link>></nowiki>
+    <nowiki><<links "Choice 2" "PassageName">><<set $variable to 1>><</link>></nowiki>
+    
+    :: PassageName
+    <nowiki><<if $variable is 1>>Different Text<<else>>Text<</if>></nowiki>
+    Rest of the Passage.</code>\
+    ''Note:'' You can also send the player to different passages depending on the choice picked. 
+
+    <h2>Layered Choices</h2>\
+    Layered Choices are possible in Twine/Twee but the result will appear different than with CScript. Instead of going to another page to show the next iteration of text and choice, the text will appear in the same page by replacing the choice list. While it can be useful, SugarCube 2 is not really built to handle a lot of layered choice to appear on one page (it is doable, but not recommended).
+
+    Twee: <code>:: PassageName
+    Text
+    <nowiki><span id="choice"></nowiki>
+    _ _ <nowiki><<link "Choice 1">><<replace "#choice">></nowiki>
+    _ _ _ _ Text that will appear
+    _ _ <nowiki><</replace>><</link>></nowiki>
+    _ _ <nowiki><<link "Choice 2">><<replace "#choice">></nowiki>
+    _ _ _ _ A different text to appear
+    _ _ <nowiki><</replace>><</link>></nowiki>
+    <nowiki></span></nowiki></code>\
+    ''Note'': the <nowiki><<replace>></nowiki> macro can be used for other things, like create an error message for an [[input macro|Input]]. In order for that macro to work, it needs the item to be replace to be wrappped in the HTML <nowiki><span></nowiki> markup.
+
+    <h2>*selectable_if Choices</h2>\
+    Twine has a very similar way of showing a choice if conditions are met. It uses the same macro introduced in the [[Conditional Statement page|IfElse]]: the <nowiki><<if>></nowiki> macro.
+
+    CScript: <code>*choice
+    _ _ *selectable_if (var) #choice 1</code>\
+    Twee: <code><nowiki><<if $var is true>><<link "Choice 1" "PassageName">><</link>><</if>></nowiki></code>\
+    
+    <h2>Reuse Choices</h2>\
+    There is no specific Reuse macro in SugarCube. However, since the principle is very similar to the *selectable_if function, we would use the <nowiki><<if>></nowiki> macro as well. In this case, you would need to create a condition to hide or disable the choice. The condition can be visiting a passage or whether a variable is a certain value. The *allow_reuse function would be a simple choice link.
+    CScript: <code>*label PassageName
+    *choice
+    _ _ *hide_reuse #choice 1
+    _ _ _ _ *goto PassageName
+    _ _ *disable_reuse #choice 2
+    _ _ _ _ *goto PassageName
+    _ _ *allow_reuse #choice 3
+    _ _ _ _ *goto PassageName
+    </code>\
+    Twee: <code>:: PassageName
+    Text
+    <nowiki><<if $var is true>><<link "Choice 1" "PassageName">><<set $var to false>><</link>><</if>></nowiki>
+    <nowiki><<if $var is true>><<link "Choice 2" "PassageName">><<set $var to false>><</link>><<else>>This Choice is disabled<</if>></nowiki>
+    <nowiki><<link "Choice 3" "PassageName">><</link>></nowiki></code>
+    ''Note:'' While the *disable_reuse changes how the choice is displayed on the page by greying it out, this is not automatic in Twine. You can choose to show a different text like in the example above, or show the same text wrappped in a <nowiki><div></nowiki> or <nowiki><span></nowiki> markup and create a new CSS class. This method can also be used for one-time choices where the player doesn't meet a certain condition.
+
+:: Input [cscript]
+    <<code>><center><h1>Input Macros</h1></center>
+    Unlike CScript, you won't need to set a variable before using an input macro. That variable can be first seen in those macros, with the input setting the macro directly. You also have multiple ways to interactively input variables. All these macros are visible in the [[Basic Macros]] page.
+
+    CScript: <code>*input_text name
+    *input_number coins 50 100</code>\
+    Twee: <code><nowiki><<textbox "$name" "Henry">></nowiki>
+    <nowiki><<numberbox "$wager" 100>></nowiki></code>\
+    ''Note:'' both the textbox and numberbox can include an initial value (the last item before the >>), but it can be optional.
+
+    <h2>Other Input Macros</h2>
+    There are other Interactive Macros to input variables. For all macros included below, you can input numberical and string values. For some, you can also input a boolean value. 
+
+    ''Checkboxes''
+    Often use for character creation, especially for aspects where a player can have multiple choices, or for inventory. For the full customisation, see the [[SugarCube Documentation|https://www.motoslave.net/sugarcube/2/docs/#macros-macro-checkbox]]
+    <code><nowiki>* <<checkbox "$item1" false true>> Item 1?</nowiki>
+    <nowiki>* <<checkbox "$item2" false true>> Item 2?</nowiki>
+    <nowiki>* <<checkbox "$item2" false true>> Item 3?</nowiki></code>
+    ''Note:'' Instead of boolean, you can assign other types of values when an option is checked or not. 
+
+    ''Radiobutton''
+    Similarly to the previous macro, it is open used in Character creation but when players can only choose one option. For the full customisation, see the [[SugarCube Documentation|https://www.motoslave.net/sugarcube/2/docs/#macros-macro-radiobutton]]
+    <code><nowiki>* <<radiobutton  "$item" "blue">> Type 1?</nowiki>
+    <nowiki>* <<radiobutton  "$item" 1>> Type 2?</nowiki>
+    <nowiki>* <<radiobutton  "$item" true>> Type 3?</nowiki></code>\
+
+    ''Cycling''
+    With this macro, you can create a fake link, which, when clicked on, will cycle through options. For the full customisation, see the [[SugarCube Documentation|https://www.motoslave.net/sugarcube/2/docs/#macros-macro-cycle]]
+    <code><nowiki><<cycle "$answer" autoselect>></nowiki>
+        <nowiki><<option "Towel">></nowiki>
+        <nowiki><<option "π" 3.14159>></nowiki>
+        <nowiki><<option 42>></nowiki>
+        <nowiki><<option false>></nowiki>
+        <nowiki><<option "∞" Infinity>></nowiki>
+    <nowiki><</cycle>></nowiki></code>\
+
+    ''Listbox''
+    With this macro, you will create a retractable list of option for the player to choose from. For the full customisation, see the [[SugarCube Documentation|https://www.motoslave.net/sugarcube/2/docs/#macros-macro-listbox]]
+    <code><nowiki><<listbox "$answer" autoselect>></nowiki>
+        <nowiki><<option "Towel">></nowiki>
+        <nowiki><<option "π" 3.14159>></nowiki>
+        <nowiki><<option 42>></nowiki>
+        <nowiki><<option false>></nowiki>
+        <nowiki><<option "∞" Infinity>></nowiki>
+    <nowiki><</listbox>></nowiki></code>
+
+:: GoTo [cscript]
+    <<code>><center><h1>*goto and Calling Scenes</h1></center>
+    
+    Since Twine and CScript are created differently, some functions are not always translatable. This is the case with the *goto and *gosub functions. The closest equivalence could be the <nowiki><<include>></nowiki> macro or a customised <nowiki><<widget>></nowiki>. Instead of jumping to another line of the file, those function call on the text/code in another Passage (for <nowiki><<include>></nowiki>) or inside a widget. Due to this, you can include those functions in the middle of the displayed passage and still have choices under them. Neither will require some sort of return function.
+
+    ''Note:'' Those function can call the same passage or macro how many times or wherever you would want it to appear.
+    ''IMPORTANT'': the <nowiki><<goto>></nowiki> macro is not the *goto equivalent as it will send the player to <u>a completely new page</u>.
+
+    CScript: <code>*goto Next
+    {Some text/code}
+    *label Next</code>\
+    Twee: <code>:: Passage1
+    Some text
+    <nowiki><<include "Passage2">></nowiki>
+    More text. Maybe a choice.
+    
+    :: Passage2
+    Some more text</code>\
+
+    <h2>Include or Widgets</h2>\
+    Both <nowiki><<include>></nowiki> and <nowiki><<widget>></nowiki> work very similarly but are set differently. <nowiki><<include>></nowiki> will call upon a full Passage while <nowiki><<widget>></nowiki> will only show what is inside the macro. 
+    
+    <<include "Example">>
+
+    On the other hand, you have the <nowiki><<widget>></nowiki> macro, which needs to be set in a Widget Passage with a [[Widget Tag|Tags]]. You will also need to name the widget and refer it in your code by its name only. You can only name widgets with the basic alphabet, it won't accept numbers (as the first character) or special characters (at all). 
+    Since the widget only displays what is inside its tags, you can set as many widgets as you want in that Passage. Only the called widget will be used. For example, I use a widget to display the code for this guide differently compared to the rest of the text.
+
+    <code>:: Story Passage
+    Some text
+    <nowiki><<include "PassageName">></nowiki>
+    <nowiki><<StoryWidget>></nowiki>
+    
+    :: PassageName
+    Some text or code or both
+    
+    :: My Widgets But The Name Can Be Anything [widget]
+    <nowiki><<widget "StoryWidget">></nowiki>
+    Some text or code or both
+    <nowiki><</widget>></nowiki></code>\
+    ''Note:'' Some may argue that <nowiki><<widget>></nowiki> is superior to <nowiki><<include>></nowiki> as it pass parameters onto the widget (very useful with Pronouns Widgets, see the [[SugarCube Documentation|https://www.motoslave.net/sugarcube/2/docs/#macros-macro-widget]] for setting parameters).
+
+    <h2>*finish and *page_break</h2>\
+    There is no such function in Twine either, as any change of Passage is done by creating <nowiki><<link>></nowiki> where you indicate which Passage the game should send the player. You will need to create a link every time you want to send the player to another page or break the narrative wall-of-text. 
+
+    Twee:<code><nowiki><<links "Next" "PassageName">><</link>></nowiki>
+    <nowiki><<links "End Chapter" "PassageName">><</link>></nowiki></code>
+
+:: Example
+    To use the <nowiki><<include>></nowiki> macro, you will need to create a Passage to call upon. That passage can have just plain text, or code, or both. For example, this paragraph is being displayed thanks to the <nowiki><<include>></nowiki> macro. It is the only element in that Passage.
+
+:: Formatting [cscript]
+    <<code>><center><h1>Formatting your Text</h1></center>
+    There is more freedom in Twine/Twee to format your text, you can have more than just bold and italics. Since the compiled file becomes a HTML file, you can use any HTML markup to format your text. You can also use Twine/Twee specific markup as well. For the full list, see the [[SugarCube Documentation|http://www.motoslave.net/sugarcube/2/docs/#markup-style]]
+
+    CScript: <nowiki>[b]Bold[/b] | [i]Italics[/i]</nowiki>
+    Twee: <nowiki>''Bold'' | //Italics//</nowiki>
+
+    <h3>Hyperlinks</h3>\
+    When it comes to hyperlinks, you will need to use the [[Link Markup|https://www.motoslave.net/sugarcube/2/docs/#markup-link]].
+
+    CScript: <nowiki>*link https://www.website.com LinkName</nowiki>
+    Twee: <nowiki>[[LinkName|https://www.website.com]]</nowiki>
+
+    <h3>Font, Colour, Size, etc...</h3>\
+    There are multiple ways of changing the styling of text and links. One way is to use the [[CSS Stylesheet|Interface]] (where you can change the Styling of the whole page), the other is to change it in-text. You can use the HTML markup or the Twine/Twee annotation.
+
+    Twee : <code><nowiki>@@style-list;Text@@</nowiki>
+    <nowiki><span style="style-list">Text</span></nowiki></code>\
+    ''Note:'' Text alignment works the same way, though you may need to use <nowiki> <p> </nowiki> or <nowiki> <div> </nowiki> instead of <nowiki> <span> </nowiki>.
+
+:: Templates [cscript]
+    <center><h1>Useful Templates and Documentation</h1></center>
+    Here you can find all official documentation for Twine, Twee and SugarCube, as well as relevant tutorials, coding communities and helpers, templates and assets.
+    If you found this guide useful, you may find my [[SugarCube 2 Guide|https://manonamora.itch.io/twine-sugarcube-guide]] interesting, to go further with the program.
+
+    <h2>Sugarcube Documentation and Useful Communities:</h2>\
+    <ul>
+        <li>[[The official SugarCube documentation|http://www.motoslave.net/sugarcube/2/docs/]]</li>
+        <li>[[The Twinery Cookbook|http://twinery.org/cookbook/]] : Twine 2 Examples, SugarCube format for each entry.</li>
+        <li>[[The Interactive Fiction Forum|https://intfiction.org/]]</li>
+        <li>[[The official Twine Discord|https://discordapp.com/invite/n5dJvPp]]</li>
+    </ul>
+    <h2>Useful Guides:</h2>\
+    <ul>
+        <li>[[Grim Baccaris' Guides|https://gcbaccaris.itch.io]]</li>
+        <li>[[Yi Weng|https://www.youtube.com/watch?v=5QyXZ7XRasA&list=PL5YOcupubqyTLWQnIqfHdoeBLFxbWcbWX]]'s Youtube Guide for moving from CScript to SugarCube.</li>
+        <li>Youtube: [[Adam Hammond|https://www.youtube.com/channel/UCJP9KsNr3DEdOVeHUsI0fXQ]], [[Dan Cox|https://www.youtube.com/c/DanCox]]</li>
+        <li>Tumblr: [[cerberus|https://cerberus-writes.tumblr.com/tagged/coding]], [[idrellegames|https://idrellegames.tumblr.com/post/664858800855089152/coding-in-twine-other-resources]] (not taking new requests), [[manonamora (me)|https://manonamora-if.tumblr.com/post/694289176538087424/coding-support-masterlist]] and [[nyehilism|https://nyehilismwriting.tumblr.com/post/664644395515199488/twine-coding-masterlist]]</li>
+    </ul>\
+    <h2>Useful Templates and Macros:</h2>\
+    <ul>
+        <li>Brushmen's [[Template Emulating the CS UI|https://brushmen.itch.io/cs-like-sugarcube-template]], including the Stats Page and Fairmath widgets.</li>
+        <li>Albie's [[Character Creation Template|https://gamesbyalbie.itch.io/character-page-tutorial]], including Pronouns Setting and Stats Page.</li>
+        <li>[[Chapel's Macros|https://twinelab.net/custom-macros-for-sugarcube-2/demo/]], includes Pronouns Settings and Stats Bar creation, Fairmath calculations.</li>
+        <li>[[HiEv's Macro|https://qjzhvmqlzvoo5lqnrvuhmg.on.drv.tw/UInv/Sample_Code.html#Main%20Menu]], includes Pronouns Settings and Stats Bar creation</li>
+        <li>Other UI Templates: [[a.w. Morgan|https://awmorgan.itch.io/]], [[cerberus|https://ccrberus.itch.io/]], [[nyehilism|https://nyehilism.itch.io/]], [[manonamora (me)|https://manonamora.itch.io/]] and [[Vanya|https://vahnya.itch.io/]] </li>
+    </ul>
+    For a comprehensive list of resources for Twine: [[Check this List|https://www.tumblr.com/manonamora-if/700577877042888704/interactive-fiction-twine-resource-megalist]]
