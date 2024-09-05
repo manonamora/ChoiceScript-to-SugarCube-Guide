@@ -1,62 +1,46 @@
 :: StoryTitle
-CScript to SG/Twee Guide
+ChoiceScript to Sugarcube Guide
 
 :: StoryData
 {
 	"ifid": "C15CE33F-61F6-4909-BB59-73EE7A3D57B1", 
 	"format": "SugarCube",
-	"format-version": "2.36.1",
-	"start": "Start"}
+	"format-version": "2.37.3",
+	"start": "Start"
+}
 
 :: Start
-	<center><h1>Welcome to this ChoiceScript To SugarCube Guide & More!</h1></center>
-	In this folder and file, you will find all that you need to help you convert your ChoiceScript game to a compiled Twine (SugarCube) file, without having to get frustrated with the Twine App.
+<h1>ChoiceScript to SugarCube Guide</h1>
+This Guide was created to help ChoiceScript creators and their projects transition to the SugarCube format of Twine. It is meant to display the differences and similarities between both coding formats, making going from one to the other easier.
 
-	The ChoiceScript to SugarCube Guide covers most CScript functions and their equivalent in Twine (or the alternative when available). The Code shown is based on the Twee Notation, the formatting style used to compile your project outside of Twine. 
-	
-	As is, the compiled file will only use the base SugarCube UI and script. The guide for Tweego in this file is based on the use of this folder with VSCode.
+The content of this Guide was based on the [[ChoiceScript Wiki|https://choicescriptdev.fandom.com/wiki/]], translating that logic into SugarCube's. TODO: rephrase next
+And, if you do not feel comfortable coding in the Twine App, this guide will go over the Twee Notation for Import or Tweego compiling.
+<hr>
+<center>''Table of Content:''</center>
+* [[About Twine and SugarCube|About]]
+* [[Understanding the Differences in Structures|Structures]]
+* [[Coding in Twine or in Twee?|TwineorTwee]]
 
-	''This Folder includes:''
-	<ul>
-		<li>A Ready-to-Code SugarCube/Twee Project:
-			<ul><li>The Minimal Base needed.</li>
-			<li>A JavaScript file for script code (currently empty).</li>
-			<li>A CSS file for stylesheets (currently empty).</li>
-			<li>A file with extra Special Passages, basic HTML styling, and base macros.</li>
-			<li>A Tweego Explanation File.</li>
-			<li>''A ChoiceScript to SugarCube Guide.''</li></ul></li>
-		<li>A compiled example HTML file and its debug version.</li>
-		<li>Relevant Tweego Files (v2.1.1-Twee 3) for a SugarCube project.</li>
-		<li>An Easy-to-Use Compiler with a cheatsheet.</li>
-	</ul> 
-	<hr>
-	''Main Menu:''
-	<<link "ChoiceScript to SugarCube/Twee Transition" "CScript">><</link>>
-	<<link "Tweego Recommended Programs" "RecProg">><</link>>
-	<<link "Using Tweego/Twee" "Tweego">><</link>>
-	<hr>
-	<center><small>Thanks to SjoerdHekking for setting me with Tweego and Arlo, Oddie and Vahnya for proofreading my CScript guide.</small></center>
+:: About
+<h1>About Twine and SugarCube</h1>
+Though they are different components, this Guide will sometimes use Twine and SugarCube interchangeably?
+TODO:
+While Twine and SugarCube are two separate things - Twine being a coding and compiling program, and SugarCube a coding //format// - this 
 
-:: Credits
-Guide created by manonamora ([[Tumblr|https://manonamora-if.tumblr.com/]]/[[Itch|https://manonamora.itch.io/]]) on Twine (v2.7.0)/Tweego with Sugarcube (v2.36.1).
-<hr>
-CScript:
-* [[ChoiceScript Wiki|https://choicescriptdev.fandom.com/wiki/Structure_of_a_ChoiceScript_game]]
-Tweego:
-* [[Documentation and Download|http://www.motoslave.net/tweego/]]
-* [[Story Formats|https://twinery.org]]
-* [[SjoerdHekking|https://github.com/SjoerdHekking]]
-<hr>
-Assets from:
-* [[Wikipedia|https://en.wikipedia.org/wiki/Main_Page]]
-<hr>
-Other:
-* [[Twinery.org|https://twinery.org/]]
-* [[SugarCube 2 Documentation|https://www.motoslave.net/sugarcube/2/docs/]]
-* [[SugarCube 2 Guide|https://manonamora.itch.io/twine-sugarcube-guide]]
-* [[Twine Resources List|https://www.tumblr.com/manonamora-if/700577877042888704/interactive-fiction-twine-resource-megalist]]
-* [[Intfiction.org Forum|https://intfiction.org/c/authoring/twine]]
-* [[Reddit r/twinegames|https://www.reddit.com/r/twinegames/]]
-* [[Twine Discord|https://discordapp.com/invite/n5dJvPp]]
-* [[W3 School|https://www.w3schools.com/]]
-<h5>You can find my other templates [[here|https://manonamora.itch.io/twine-sugarcube-templates]].</h5>
+> //In more details://
+//''Twine''// is a free and open-source tool to create interactive, non-linear stories, created by Chris Klimas in 2009. It is now maintained by multiple individuals, in [[several repositories|https://github.com/tweecode]]. ''//Twine//'' is also a registered trademark of the [[Interactive Fiction Technology Foundation|https://iftechfoundation.org/]].
+
+''//Twine//'' offers both a desktop and browser application on [[its website|https://twinery.org]], giving creators a visual representation of each passage in their game. The browser version can also be opened on tablets and mobile devices.
+
+Over the years, Twine has had [[multiple story formats|http://mcdemarco.net/tools/hyperfic/twine/catalog/]], among others SugarCube. Twine compiles the code of the chosen format to create a file in the format's choice (usually HTML) or Twee. The other base formats of Twine 2 are: Harlowe, Chapbook, and Snowman.
+
+''//SugarCube//'' is a free (gratis and libre) coding format for Twine/Twee created and maintained by Thomas M. Edwards. It is based on JavaScript and jQuery, and can be styled with HTML and CSS.
+
+Thomas M. Edwards is also the creator of //''Tweego''//, a free (gratis and libre) command line compiler for Twine/Twee story formats written in Go. It is an alternative to Twine, and can be used with any Integrated development environment (IDE), like VSCode.
+This guide was compiled in Tweego.
+
+If you want to support the parties named above, you can find here the links for:
+* Chris Klimas (klembot) : [[Patreon|https://www.patreon.com/klembot]]
+* Thomas M. Edwards (TME - The Mad Exile) : [[Patreon|https://www.patreon.com/thomasmedwards]] - [[Ko-Fi|https://ko-fi.com/thomasmedwards]]
+* The Interactive Fiction Technology Foundation : [[Donations|https://iftechfoundation.org/give/]]
+> ''Note:'' to support other parties creating assets and resources for Twine, check this [[list|https://manonamora-if.tumblr.com/post/700577877042888704/]] (non-exhaustive).

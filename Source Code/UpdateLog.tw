@@ -1,0 +1,52 @@
+:: Update Log 
+
+
+V2 now
+[04-Sep] - Set differences between Twine and Twee
+[04-Sep] - Cleared up differences into new chapter
+[04-Sep] - Re-planned the Guide's structure
+[04-Sep] - Added an Update log
+[04-Sep] - Regoranised the Folder (removed Tweego)
+
+V1.1.0 -31-Jul-2023
+Hi Everyone,
+
+I have been going through all my templates and guides lately, trying to iron things out. This guide was also on my list.
+Here's what has been changed:
+
+    Added a Credit page with sources of the code used, and list of Resources
+    Updated the list of Resources in the ChoiceScript to SugarCube Guide
+    Fixed some typo and formatting issues in both CS to SG and Tweego guides.
+    Edited some annotation (hidden in the code).
+    Fixed some errors and added explanations in the ChoiceScript to SugarCube Guide (Widgets, Metadata, Variables)
+    Added a text file explaining how to change your project IFID
+    Added a Read Me! text file
+
+It seems like a lot, but it really just some minor notes here and there :P
+This is very likely that this page will not see any change (unless the SugarCube 2 format changes drastically).
+
+OH! Also, the guide is now playable directly on itch (or you can still view it on my website).
+
+- Manon
+
+V1 - 06-Sep-2022
+[06-Sep]
+
+After two weeks of announcing the creation of this guide, it is finally here!
+
+This folder includes all files from the Ready-to-use Tweego Folder, with the added ChoiceScript to Sugarcube Guide. The Guide is based on the ChoiceScript Wiki  and  goes over all important points of file and code formatting, code/macro equivalence (or closest substitute) with examples and list of helpful documentation and templates.
+
+Folder:
+
+    A Ready-to-Code SugarCube/Twee Project:
+        The Minimal Base needed.
+        A JavaScript file for script code (currently empty).
+        A CSS file for stylesheets (currently empty).
+        A file with extra Special Passages, basic HTML styling, and base macros.
+        A Tweego Explanation File.
+        A ChoiceScript to SugarCube Guide. 
+    A compiled example HTML file and its debug version.
+    Relevant Tweego Files (v2.1.1-Twee 3) for a SugarCube project.
+    An Easy-to-Use Compiler with a cheatsheet. 
+
+Please note: the Compiler will only compile .tw file into a usable HTML file. It cannot change a ChoiceScript coded game into a SugarCube coded one.

@@ -1,0 +1,34 @@
+:: Startup
+<h1>Starting Up your Project</h1>
+When starting up a new project, ChoiceScript requires one special file: {{{startup.txt}}}, with the project's name, the list of scenes files, and the variables defined.
+{{{
+    *title My First ChoiceScript Game
+    *author Jane Doe
+    *scene_list
+    _ _startup
+    _ _chapter1
+    *create name "Unknown"
+    *create gold 0
+    *create backpack false
+}}}
+Twine projects three passages: {{{:: StoryTitle}}} for the project's name, {{{:: StoryData}}} for the IFID and format information, and the starting passage.
+{{{
+    :: StoryTitle
+    The title of your game
+
+    :: StoryData
+    {
+        "ifid": "C15CE33F-61F6-4909-BB59-73EE7A3D57B1", 
+        "format": "SugarCube",
+        "format-version": "2.37.3",
+        "start": "Start"
+    }
+
+    :: Start
+    Your first passage [it can have whatever text/code you want, this is just a place holder]
+}}}
+> ''Note:'' these passages are automatically set in Twine, when you start a new project - with only the starting passage visible on the screen. If you are using the [[Twee Notation|TODO:]], you will need to set them manually.
+
+
+
+
