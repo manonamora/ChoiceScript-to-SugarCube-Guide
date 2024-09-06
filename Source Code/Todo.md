@@ -12,12 +12,7 @@ TODO:
         -> Sugarcube Guide
 
 Structure ToC:
-
-- Starting your Project
-    - Defining variables and types
-        - Displaying Variables
-    - Notes on Achievements
-    - Letting the Player save
+    - Displaying Variables
 - New Passages and Choices
 - Conditional Statements
 - *goto and Calling Scenes 
@@ -25,4 +20,10 @@ Structure ToC:
 - Ending Page
 - Miscellaneous
     - Special passages?
+    - tags
 - Useful Templates and Documentation
+
+- inventory system?
+
+
+Add something somewhere that new passages are like labels, if labels also started a page break?

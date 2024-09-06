@@ -6,10 +6,7 @@
     If I am missing an important aspect of CScript which should be translated into Twine, please let me know!
 
     > <<link "Difference in Game Folders" "Folder">><</link>>
-    > <<link "Startup.txt for Tweego, Stats and Achievements" "Startup">><</link>>
-    > <<link "Notes on Achievements" "Achievements">><</link>>
     > <<link "Scenes and Passages" "Scenes">><</link>>
-    > <<link "Letting the Player Save" "Saving">><</link>>
     
     > <<link "Variable types and Setting them" "CSVariable">><</link>>
     > <<link "Input Macros" "Input">><</link>>
@@ -42,46 +39,6 @@
     You can add as many <nowiki>.tw</nowiki> files as you want. Tweego will compile everything at the end. For example, this HTML file is compiled of 4 <nowiki>.tw</nowiki> files.
     
     ''Note:'' In the Twine App, the system will compile your project to an HTML file as you edit it. The JavaScript and CSS have their own special window you can make your edits.
-
-:: Startup [cscript]
-    <<code>><center><h1>Startup.txt for Tweego</h1></center>
-    As with CScript, Tweego needs specific items to compile your code into a working file. However, the some of required information is different (see code below or [[the Tweego Guide|Base]] for more details).
-
-    Tweego does not need a Scene List, as it compiles the passages and the links betweent them automatically. The Author's Name is optional but can be added with a [[Special Passage|Passages]]. You can also [[create variables at setup|Variable]] (advised for longer projects).
-
-    ''But'' you will need to indicate a Title for your project, some data about the coding format and version (like SugarCube and version 2.36.1) and the [[IFID|Base]]. And you will need at least the starting passage (always named Start in Tweego).
-
-    <h3>CScript</h3>\
-    <code>*title My First ChoiceScript Game
-    *author Jane Doe
-    *scene_list
-    _ _startup
-    _ _chapter1
-    *create name "Unknown"
-    *create gold 0
-    *create backpack false</code>
-    <h3>Tweego</h3>\
-    <code>:: StoryTitle
-    The title of your game
-
-    :: StoryData
-    {
-    "ifid": "C15CE33F-61F6-4909-BB59-73EE7A3D57B1", 
-    "format": "SugarCube",
-    "format-version": "2.36.1",
-    "start": "Start"
-    }
-
-    :: Start
-    Your first passage [it can have whatever text/code you want, this is just a place holder]</code>\
-    For more information on setting up your first project, see [[this page|Base]].
-
-    ''Note:'' The Twine App set this up automatically when you create a new project.
-
-    <h3>Notes on Saves, Stats Page and Achievements</h3>\
-    Unlike CScript, Twine (SugarCube) has a built-in Save System, where players can save their playthrough in their browser's cache or download it as a file. I go in more detail about the save System in [[this page|Saving]].
-
-    However, Twine does not have a built-in system for Stats and Achievements. You will need to set it up with an extra passage and some extra code (JavaScript, CSS and/pr SugarCube macros). For each, there are different ways to include them in your project. You can read more about the [[Stats Page here|Scenes]] and how to set up [[Achievements here|Achievements]]. 
 
 :: Scenes [cscript]
     <<code>><center><h1>Scenes (CScript) and Passages (Twine)</h1></center>
@@ -118,64 +75,6 @@
     CScript: <nowiki> *label PassageName</nowiki>
     Twee: <nowiki>:: PassageName </nowiki>
 
-    <h2>Statistics Page:</h2>\
-    While you do not need a separate file for the game's statistics, as it can be a regular Passage in any of your <nowiki> .tw </nowiki> files, the coding of the Statistics Page in Twine can be considered more obtuse than in CScript. The Stats bars are not included in any base Twine formats and requires an addition of code in JavaScript, CSS and in-text Code (often HTML and/or widgets). 
-    
-    There are however many templates out-there to create Stats Bar, each having different approach to its visual and the code behind. You can browse and choose which one fits your project the best, and just Copy-Paste the relevant code in your own file. You can find all the ones I know of in the [[Template and Documentation Page|Templates]].
-
-    <h3>Note on Fairmath and Arithmetic operators</h3>
-    Since Twine is based on JavaScript, you can use any Arithmetic operators based on JavaScript to change the value of variables. You can find the base operators [[here|http://www.motoslave.net/sugarcube/2/docs/#macros-macro-set]] as well as the Math functions [[here|http://www.motoslave.net/sugarcube/2/docs/#methods-math]].
-
-    While Twine does not have Fairmath as a function, it can emulate it with some extra JavaScript code/widget (as explained in [[the Twine Cookbook|https://twinery.org/cookbook/fairmath/sugarcube/sugarcube_fairmath.html]]). You can also find personalised macros and templates including similar code in the [[Template Page|Templates]]
-
-:: CSVariable [cscript]
-    <<code>><center><h1>Variable types and Setting them</h1></center>
-    Betweent the two systems, the base use of variables are almost identical: both have temporary and permanent variables working in a similar fashion (with the first disappearing when moving to another scene and the other staying in memory throughout the game); with both, variables can be numerical, strings, or boolean; and the variable names are case-sensitive.
-
-    The most obvious difference is when/how variables are set and how variables are formatted. Twine/Twee uses one setting macro <nowiki><<set>></nowiki> for all types of variables, wherever in the game AND when the value of a variable needs to be modified. Moreover, the macro can set multiple variables (and multiple types) in one single command.
-    Example: <nowiki><<set $variable to true, _variable to 3, setup.variable to "Henry">></nowiki>
-
-    When it comes to naming variables, Twine/Twee only uses basic alphabetical (a to z, A to Z) and numberal characters. It will not accept punctuation or special characters as part of the name. Underscores are used as the starting point for temporary variables, the dollar sign for permanent variables, and the dot for JavaScript variables, objects and JavaScript functions. 
-    \
-    <h2>Setting Variables</h2>\
-    <h3>Temporary Variables</h3>\
-    Like in CScript, you can create a temporary variable, set a value (and change its value) and let it disappear when moving to another Passage (it unsets automatically). In Twine/Twee, you start naming the variable with an underscore.
-
-    Temporary variables are really useful in choices where the player does not change passages, making quick calculations (like an RNG check), and in widgets.
-
-    CScript: <code> *temp var 3 | *temp var false | *temp var "Henry"
-    *set var +3</code>\
-    Twee: <code><nowiki><<set _temp to 3, _temp2 to false, _temp3 to "Henry">></nowiki> 
-    <nowiki><<set _temp += 3>></nowiki></code>\
-    
-    <h3>Permanent Variables</h3>\
-    The main difference between CScript and Twine/Twee is that you are not required to declare those variables at startup (though it is recommended for larger projects, see this [[Special Passage|Variable]] setup). You can create them at any point during the story and unset them whenever you want. A permanent variable starts with a dollar sign.
-
-    CScript: <code> *create number 3 | *create test false | *create name "Henry" 
-    *set number +3 </code>\
-    Twee: <code><nowiki><<set $number to 3, $test to false, $name to "Henry">></nowiki> 
-    <nowiki><<set $number += 3>></nowiki></code>\
-    ''Note:'' For larger games, it is not recommended to have too many permanent variables being tracked at the same time. To reduce the use of lag, it is best to nest variables in objects or arrays, set them in JavaScript, use temporary variables or other [[Sugarcube functions|https://www.motoslave.net/sugarcube/2/docs/#functions]].
-    <h3>SUPER-Permanent Variables</h3>\
-    Since Twine is based on JavaScript, you can set "JavaScript" variables. These are useful to reduce the loading time and lag and set <u>items that will not change</u> throughtout the game (ex: an item price). It is best used in the {{{StoryInit}}} Special passage or in the JavaScript file.
-
-    Twee: <code><nowiki><<set setup.number to 3, setup.test to false, setup.name to "Henry">></nowiki></code>\
-    ''Note:'' Since those variables are based on JavaScript, printing them on the screen will be slightly different to regular variables (see [[this page|PrintV]]). 
-    <h3>Super-EXTRA Variables</h3>\
-    Since Twine is based on JavaScript is it much easier to create and use objects and arrays** as either temporary or permanent variables. Objects (<nowiki> object.{} </nowiki>) are a collection of other variables, they are very useful to group variables of a certain use (ex: pronouns, player appearance, etc...). On the other hand, arrays (<nowiki> array.[] </nowiki>) are ordered series of strings, numbericals, boolean values or other variables/objects. They can be used for many things, like inventory or lists.
-    
-    Object: <code><nowiki><<set $object to {"name" : "Henry", "number" : 3, "test" : false}>> OR <<set $object to {}, $object.name to "Henry", $object.number to 3, $object.test to false>></nowiki></code>\
-    Array: <code><nowiki><<set $array to ["Apple", "Blueberry", 4, false]>></nowiki></code>\
-    ''Note:'' If objects and arrays are set with JavaScript (setup.) they can't be edited, only unset.
-    ** Note on arrays: As of September 2022, CScript has special commands for [[creating/setting/deleting arrays|https://forum.choiceofgames.com/t/new-in-choicescript-create-array-temp-array-commands-page-break-advertisement/124442/1]].
-    <h2>Unsetting Variables:</h2>\
-    Since temporary variables are automatically deleted when passages change, there is no need to unset those. However, it can be usefull to unset permanent variables when those are not necessary anymore. Like with the <nowiki><<set>></nowiki> macro, the <nowiki><<unset>></nowiki> one can unset multiple variables in one go.
-
-    CScript: <code> *delete number | *delete test | *delete name "Henry"</code>\
-    Twee: <code><nowiki><<unset $number, $test, $name>></nowiki></code>\
-    ''Note:'' For object variables, it is best to use <nowiki><<run delete $object.name>></nowiki> instead of <nowiki><<unset>></nowiki>, especially if other variables inside the object are still defined.
-
-    ''Note:'' For all possible ways to change a variable's value, see the [[SugarCube documentation|http://www.motoslave.net/sugarcube/2/docs/#macros-macro-set]]
 :: PrintV [cscript]
     <<code>><center><h1>Displaying Variables</h1></center>
     Displaying variables in Twine/Twee is not as straightforward as in CScript, as it will depend on the type of variable.
@@ -273,14 +172,7 @@
     <h2>Share the Game</h2>\
     Twine/Twee does not have specific script to share the game to other websites, but you are free to add as many hyperlinks as you want (see [[Formatting]]).
 
-:: Saving [cscript]
-    <<code>><center><h1>Letting the Player Save</h1></center>
-    Twine/Twee (for SugarCube) has a built-in save function which allows the player 8 save slots in their browser cache and an infinite amount by Saving to Disk, via the Save Menu. The Saving function can be edited via the [[JavaScript sheet|Tags]], enabling autosave and autoname or changing the amount of save-slots.
 
-    The Save will save the information about the player history (which passage visited) and the value of set variables or other metadata.
-
-    ''Note:'' Savefiles can be broken if the game has been updated in significan ways (ex: introducing new variables in the StoryInit passage or change the name of Passages).
-    ''Note 2:'' Since a playthrough is saved in a browser cache, deleting said cache will delete the save. If the player has not enabled cookies/cache, it will send the player an error or may not load the file properly.
 
 :: Miscellaneous [cscript]
     <<code>><center><h1>Miscellaneous</h1></center>
@@ -348,59 +240,6 @@
     <nowiki><<link "Next" "PassageName">><<unset $text>><</link>></nowiki>
     <nowiki><</switch>></nowiki></code>\
     ''Note:'' <nowiki>`passage()`</nowiki> in the link will tell the system to go again in that passage (:: Passage 2, here), but to include all changed values of variable (here, the value of $text in the link). However, it is recommended to use {{{<<link "Next" >><<replace '.passage'>><<include `passage()`>><</replace>><<set $text +=1>><</link>>}}} instead.
-
-:: Achievements [cscript]
-    <<code>><center><h1>Notes on Achievements</h1></center>
-    While Twine does not have special functions around Achievements, it is still possible to create an Achievement System in a project. There are multiple ways of doing so: I will show here the variable and metadata version. It is also possible to create more complicated Widgets or JavaScript version.
-
-    <h2>Variable Achievements</h2>\
-    This is probably the most basic way of creating achievements. You can create a permanent variable for each achievement, an object or array including all achievements.
-
-    You would usually set the achivement on the passage where the content of the achievement would happen.
-
-    ''Permanent Variables:''
-    <code>:: Passage
-    <nowiki><<set $achiv1 to true>></nowiki>
-    
-    :: Achievement
-    <nowiki><<if $achiv1 is true>>Achievement One Earned<</if>></nowiki></code>
-    ''Object Variables:''
-    <code>:: StoryInit
-    <nowiki><<set $achiv to {}>></nowiki>
-    
-    :: Passage
-    <nowiki><<set $achiv.one to true>></nowiki>
-    
-    :: Achievement
-    <nowiki><<if $achiv.one is true>>Achievement One Earned<</if>></nowiki></code>
-    ''Array Variables:''
-    <code>:: StoryInit
-    <nowiki><<set $achiv to []>></nowiki>
-    
-    :: Passage
-    <nowiki><<set $achiv.push("one")>></nowiki>
-
-    :: Achievement
-    <nowiki><<if $achiv.includes("one")>>Achievement One Earned<</if>></nowiki></code>\
-
-    <h2>Memorize and MetaData</h2>\
-    Instead of creating variables, you can rely on the JavaScript aspect of Twine and save the achievements in the metadata of the savefile.
-
-    ''Memorize and Recall''
-    <code>:: Passage
-    <nowiki><<run memorize("achiv1", true)>></nowiki>
-    
-    :: Achievement
-    <nowiki><<if recall("achiv1") is true>>Achievement One Earned<</if>></nowiki></code>
-
-    ''State.Metadata:''
-    <code>:: Passage
-    <nowiki><<run State.metadata.set("achiv1", true)>></nowiki>
-
-    :: Achievement
-    <nowiki><<if State.metadata.get("achiv1") == true>>Achievement One Earned<</if>></nowiki></code>
-    
-    ''Note:'' using MetaData will affect any playthrough in the player's device, while variables will only affect the current save.
 
 :: Choices [cscript]
     <<code>><center><h1>Choices and Passages</h1></center>

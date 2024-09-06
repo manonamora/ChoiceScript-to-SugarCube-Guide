@@ -1,0 +1,137 @@
+:: Commands
+<h1>Commands vs Macros/Markup</h1>
+To run bits of code, ChoiceScript will use commands, an instruction for the program that something other than displaying text will happen. It is formatted with an asterisk before the command wanted.
+{{{
+    *command
+}}}
+Some commands only take one line (e.g. {{{*set}}}), while others will need multiple lines with indentation (e.g. {{{*choice}}}).
+{{{
+    *set stat 35
+
+    *choice
+        #choice1 
+            Text 
+                *other_command
+}}}
+
+Twine, on the other hand, works with both macros and markup. Macros are similar to commands, in that they will tell the program that code must be run. Markup is a notation that will indicate [[styling|TODO:]], mainly used as a replacement for HTML.
+
+Macros are formatted with {{{<< >>}}}, wrapped around the code.
+{{{
+    <<macro [options]>>
+}}}
+There are two forms of macros: a one-block macro and a container macro. The one-block is self-explanatory (e.g. {{{<<set>>}}}), while the container is a two-block form, which can nest text, other macros, or both (e.g. {{{<<if>>}}}).
+{{{
+    <<set $variable to 3>>
+    <<if $variable is 3>>
+        /* Something happens here */
+    <</if>>
+}}}
+\
+One exception can be found in links, which can be both formatted as Macro and Markup. And they can also be mixed.
+{{{
+ → Markup:
+    [[Link]]
+    [[Text|PassageName]]
+
+ → Macro:
+    <<link "Text" "PassageName">><</link>>
+
+ → Mixed:
+    <<link [[Text|PassageName]]>><</link>>
+}}}
+The Markup form is particularly useful to quickly create links, as well as form visual connections between passages on the Twine app (an arrow will appear). The Macro form allows the inclusion of extra code to be run, such as setting variables only under certain conditions.
+
+:: Variables
+<h1>Variables: Types, Defining, Modifying and Deleting</h1>
+Between ChoiceScript and Twine, the base use of variables are almost identical: both have temporary and permanent variables, the first disappearing when moving to a new scene and the second sticking throughout the game. In both, variables can be numerical, strings, or boolean, and their names are case-sensitive.
+
+The biggest difference is when the permanent variables are define. ChoiceScript requires all permanent variables to be defined in {{{startup.txt}}}, while in Twine, it is optional. As such, you can set variables whenever and wherever you want or need.
+
+Another difference comes with the macro used to set those variables. ChoiceScript uses {{{*create}}} to defined permanent variables and {{{*set}}} to modify its value, as well as {{{*temp}}} to create a temporary variable. SugarCube, on the other hand, uses {{{<<set>>}}} for everything. 
+
+As well, while the different {{{*commands}}} require one line for each variable, {{{<<set>>}}} can create or edit multiple variables (and of multiple types) at once:
+{{{
+    <<set $variable to true, _variable to 3, setup.variable to "Henry">>
+}}} 
+
+To differentiate between temporary and permanent variables, Twine formats these variables differently: using an underscore ({{{_temporary}}}) or a dollar sign ({{{$permanent}}}) as the starting point. As well, you can only use the basic alphabetical (a → z, A → Z) and numerical (0 → 9) characters to create a variable's name. Punctuations and other special characters (e.g. {{{-}}}) won't be accepted.
+\
+<h2>Setting and Modifying Variables</h2>\
+<h3>Temporary Variables</h3>\
+Like with ChoiceScript, you can create a temporary variable ({{{_temp}}}), set a value (and modify it), and let it disappear when moving to a new passage (unset automatically). Temporary variables are particularly useful to tract interactions within on passage, making quick calculations (like an RNG check), and in [[widgets|TODO:]].
+{{{
+ → ChoiceScript
+    *temp var 3 | *temp var false | *temp var "Henry"
+    *set var +3
+
+ → SugarCube
+    <<set _temp to 3, _temp2 to false, _temp3 to "Henry">>
+    <<set _temp += 3>>
+}}}
+\
+<h3>Permanent Variables</h3>\
+As previously mentioned permanent variables do not need to be defined at startup (though it is recommended in specific cases). But, while you can create them anywhere and anytime, you should still make sure they exist before they are ever used in the game. They are useful to track anything you may want to carry over between passages (e.g. choices, stats, characteristics) and anything in between.
+{{{
+ → ChoiceScript
+    *create number 3 | *create test false | *create name "Henry" 
+    *set number +3 
+
+ → SugarCube
+    <<set $number to 3, $test to false, $name to "Henry">>
+    <<set $number += 3>>
+}}}
+> ''Note:'' for larger games, it is recommended to keep the amount of permanent variables being active at the same time to a minimum. To reduce potential lag, merging variables into objects or arrays, using JavaScript or temporary variables, [[Sugarcube functions|https://www.motoslave.net/sugarcube/2/docs/#functions]], or even unset them.
+\
+<h3>Fixed variables</h3>\
+Since SugarCube is based on JavaScript, you can create "JavaScript" variables to save information. More specifically: information that will not change over the course of the game (e.g. item price). These variables should only be set at the start (either in the {{{StoryInit}}} [[passage|TODO:]] or in [[JavaScript|TODO:]]), and no change to that variable will be saved. Instead of a character to announce the variable, this one starts with {{{setup.}}}
+{{{
+    <<set setup.number to 3, setup.test to false, setup.name to "Henry">>
+}}}
+\
+<h3>Objects and Arrays</h3>\
+Again, because SugarCube is based on JavaScript, you can also create objects and arrays in your project, either as a temporary, permanent, or setup variable. They can also be mixed (an object filled with arrays, or an arrays filled with objects). In both cases, if you want to add elements to objects and arrays, you will need to ensure the variables are defined as such beforehand.
+
+Objects ({{{object.{}}}}) are collections of other variables, each saved as a {{{property}}} of the object. They are most useful when grouping variables of a certain use (e.g. pronouns, PC appearance, item characteristics, etc..).
+{{{
+ → Define object (empty):
+    <<set $object to {}>>
+
+ → Define object (filled):
+    <<set $object to {
+        name : "Henry", 
+        number : 3, 
+        test : false
+    }>> 
+
+ → Add a property to an object:
+    <<set $object.name to "Henry", $object.number to 3, $object.test to false>>
+}}}
+
+Arrays ({{{array.[]}}}) are ordered series of values (strings, numbers, boolean) or variables. They can be used for many things, though more commonly for inventories and lists. Each element in an array is given an index position, with the first one starting at {{{[0]}}}.
+{{{
+ → Define array (empty):
+    <<set $array to []>>
+
+ → Define array (filled):
+    <<set $array to ["Apple", "Blueberry", 4, false]>>
+
+ → Add an element to an array:
+    <<set $array.push("Apple", 4, false)>>
+}}}
+
+> ''Note:'' In an object or array is set as a {{{setup.}}} variable, they cannot be edited.
+\
+<h2>Unsetting Variables</h2>\
+While this will be automatic for temporary variables when the player moves to a new passage, you will need to use a separate macro to delete permanent variables: {{{<<unset>>}}}. Like its setting counterpart, this macro can unset multiple variables at once.
+{{{
+ → ChoiceScript
+    *delete number | *delete test | *delete name
+
+ → SugarCube
+    <<unset $number, $test, $name>>
+    <<unset $object.property>>
+    <<set $array.deleteAt[0], $array.deleteAll('Apple')>>
+}}}
+
+> ''Notes:'' for all possible ways to change a variable's value, you can find all accepted operators in the [[SugarCube documentation|http://www.motoslave.net/sugarcube/2/docs/#twinescript-operators]]. Modifying arrays is a bit more complex, requiring the use of [[methods|http://www.motoslave.net/sugarcube/2/docs/#methods-array]].

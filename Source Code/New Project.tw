@@ -5,13 +5,13 @@ When starting up a new project, ChoiceScript requires one special file: {{{start
     *title My First ChoiceScript Game
     *author Jane Doe
     *scene_list
-    _ _startup
-    _ _chapter1
+        startup
+        chapter1
     *create name "Unknown"
     *create gold 0
     *create backpack false
 }}}
-Twine projects three passages: {{{:: StoryTitle}}} for the project's name, {{{:: StoryData}}} for the IFID and format information, and the starting passage.
+For Twine projects, the minimal requirement is the three following passages: {{{:: StoryTitle}}} for the project's name, {{{:: StoryData}}} for the IFID and format information, and the starting passage.
 {{{
     :: StoryTitle
     The title of your game
@@ -25,10 +25,353 @@ Twine projects three passages: {{{:: StoryTitle}}} for the project's name, {{{::
     }
 
     :: Start
-    Your first passage [it can have whatever text/code you want, this is just a place holder]
+    Your first passage 
+    [it can have whatever text/code you want, this is just a place holder]
 }}}
-> ''Note:'' these passages are automatically set in Twine, when you start a new project - with only the starting passage visible on the screen. If you are using the [[Twee Notation|TODO:]], you will need to set them manually.
+If you are using Twine, these passages will be set automatically when you start a new project. You only need to name your new project (which can be edited), and Twine will assign it a unique IFID, as well as create an //Untitled// starting passage. For Tweego/[[Twee|TODO:]], you will need to set those manually.
+> ''Note:'' you can generate new IFIDs on [[this website|https://www.tads.org/ifidgen/ifidgen]].
 
+As [[mentioned before|Structures]], Twine does not need a Scene list, since the passages are automatically connected when you create links between them. Even if your are using Tweego with multiple ({{{.tw}}}) files, the connection will still happen during compiling.
 
+Unlike with ChoiceScript, adding the Author's Name is optional in Twine, and will be dependent on the coding format. In SugarCube, this can be done with a [[Special Passage|TODO:]], to appear in the sidebar (usually {{{StoryAuthor}}}).
 
+Similarly for variables, you do not need to define them at the start of the project, as they can be set, unset or modified at any point. However, for longer projects, it is often advised to defined those variable at setup. In SugarCube, this will be achieved through the [[Special Passage|TODO:]] called {{{StoryInit}}}.
 
+:: Saves
+<h1>Letting the Player Save</h1>
+Unlike ChoiceScript, Twine comes with saving of the player's progress through the story - defined differently between formats. SugarCube has a built-in Save System, with which players can save their playthroughs either in their browser's cache or in a downloadable file. The Save System saves information about the player's history (passages visited), the value of set variables, and other metadata.
+
+By default, SugarCube comes with 8 browser save slots, an export button for the current save, and an export button to bundle all save slots into a save file. The Saving System can be edited to your wishes, to increase/decrease the amount of save slots, enable Autosaves, or change how saves are named. This must be done in the [[JavaScript passage|TODO:]].
+> ''Note:'' there are [[templates|TODO:]] out there to do this for you.
+
+Similar to ChoiceScript playthroughs, saves can be broken if the project has been updated in significant ways, such as defining new variables in {{{StoryInit}}} or change the name of passages. In these cases, players will need to restart their playthroughs. 
+
+Because saving playthroughs require access to the player's browser cache, players may run into issues if that access is severed. If the browser does not allow cache and cookies on the hosted website, the game will start with an error. If the browser has delete its cache (manually or automatically) between playthroughs, these saves will be gone as well.
+
+:: Stats
+<h1>Creating a Stats Page</h1>
+Twine does not come with its own Built-In Stats system or Fairmath operator. So, if you want to include a Stats page in your project, you will need to set it wup yourself. This will can be done with a mixture of SugarCube code, HTML/CSS, and JavaScript.
+
+If the task might seem too daunting, there are multiple [[templates|TODO:]] out there to help create stats bars, each having different approaches in its visual and the code running behind it. You can browse and choose which version fits best for your project, and transfer the relevant code.  
+\
+<h2>Setting up the Stats Variables</h2>\
+You will first want to [[define all the variables|TODO:]] meant to be used for Stats in the {{{StoryInit}}} [[passage|TODO:]]:
+{{{
+    :: StoryInit
+    <<set $intelligence to 50>>
+    <<set $charismatic to 0>>
+    <<set $life to 100>>
+}}}
+\
+<h3>Editing the Stats Variables</h3>\
+At any moment, you can change the value of those variables, by either modifying the value, adding more or subtracting.
+{{{
+    <<set $intelligence to 65>>
+    <<set $charismatic += 3>>
+    <<set $life -= 45>>
+}}}
+The first option is //not really// recommended for statistics, since it won't take into account the original value of the variable. On the other change, the {{{+=}}} and {{{-=}}} operators will either add or subtract the indicated value from the variable. 
+
+However, if you need those variables to stay within a min-max range, you should consider the following method instead:
+{{{
+ → Addition
+    <<set $var to Math.clamp(($var + value), min, max)>>
+    <<set $stoic to Math.clamp(($stoic + 4), 0, 100)>>
+
+ → Subtraction
+    <<set $var to Math.clamp(($var - value), min, max)>>
+    <<set $stoic to Math.clamp(($stoic - 4), 0, 100)>>
+}}}
+This will add/remove a specified amount from the variable, and ensure the value stays within the range.
+
+But, if you are looking for percentage change in the value of the variable, you will need the Fairmath method.
+\
+<h3>Setup the Fairmath Macro</h3>\
+While you could do the whole Fairmath calculation manually when you change the variable, the formula behind the system  is not the simplest to translate into SugarCube. You actually need a bit of JavaScript to make it work:
+{{{
+ → Fairmath addition
+    round(x+((100-x)*(y/100)))
+    Math.round($var+((100-$var)*(value/100)))
+    
+ → Fairmath subtraction 
+    round(x-(x*(y/100)))
+    Math.round($var-((100-$var)*(value/100)))
+}}}
+\
+Because editing the formula is tedious, it is simplest to hide it all the calculation inside a Custom Macro ([[this one|https://brushmen.itch.io/cs-like-sugarcube-template]], by brushmen). Add the following code in your [[JavaScript|TODO:]]
+{{{
+    //<<fairmath>> macro, by brushmen
+    Macro.add('fairmath', {
+        handler: function() {
+        let x = State.getVar(this.args[0]);
+        let y = this.args[1];
+        if (y > 0) { x = Math.round(x+((100-x)*(y/100))); }
+            else if (y < 0) {
+            y = Math.abs(y);
+            x = Math.round(x-(x*(y/100)));
+            }
+            x = setup.clamp(x, 0, 100);
+            State.setVar(this.args[0], x);
+        }
+    });
+}}}
+You can then use that custom macro in any passage where you need to increase/decrease those stats.
+{{{
+    <<fairmath "$intelligence" -5>>
+	<<fairmath "$charismatic" 5>>
+}}}
+The first will have a 5% decrease in its value, while the second line will see a 5% increase. 
+\
+<h2>Displaying the Stats</h2>\
+When you have your stats all set up, you can start thinking about how to display it on the page. There are essentially three ways of doing it:
+* display the value of the variable 
+* display a text variation dependent on the value
+* display a stat's bar 
+\
+<h3>Display a plain Value</h3>\
+For stats like age, coins, skill levels, or life points, you will want to [[display the value|TODO:]] of the variable as is on the screen:
+{{{
+    ''Health:'' $life 
+    ''Wealth:'' $coins
+    ''Glass-making:'' $glassLevel
+}}}
+> ''Note:'' you can also use the {{{<<print>>}}} [[macro|TODO:]] if you prefer.
+\
+<h3>Display Text Variation</h3>\
+For stats like how positive/negative an NPC or group sees the players, or for additional text flavour to add along another stat, you can use [[conditional statements|TODO:]] to display text variation:
+{{{
+    <<if $relation is 0>>
+        P wants to kill you.
+    <<elseif $relation lt 20>>
+        P is pissed at you.
+    <<elseif $relation lt 40>>
+        P dislikes you.
+    <<elseif $relation is 50>>
+        P is indifferent. 
+    <<elseif $relation lt 75>>
+        P likes you.
+    <<elseif $relation lt 90>>
+        P is in love with you.
+    <<else>>
+        P worships you.
+    <</if>>
+}}} 
+> ''Note:'' if you are using other operators than {{{is}}} or {{{isnot}}}, you will need to order them from most constraining to least constraining.
+\
+<h3>Display Stats Bars</h3>\
+This final option can be fairly easy, but customising it can make it pretty complex. Unlike the options above, there isn't a SugarCube macro that will create a stats bar for you. There are, however, [[templates and custom macros|TODO:]] that can help you create them.
+
+The easiest method is to use HTML elements to create your stats bar, like the {{{<meter>}}} or {{{<progress>}}} elements. These elements come pre-styled by the browser in use. So if you want to modify their appearances, you will need to style them manually <small>(see //Creating Stats, Meter, and Progress Bars// section of [[this guide|https://manonamora.itch.io/twine-sugarcube-guide]])</small>.
+<meter @value="$intelligence" min="0" max="100"></meter> | <progress @value="$charismatic" max="100"></progress>
+{{{
+    <meter @value="$intelligence" min="0" max="100"></meter>
+    <progress @value="$charismatic" max="100"></progress>
+}}}
+> ''Note:'' the {{{@}}} before the {{{value}}} attribute will tell SugarCube that there is a variable attached to it.
+
+You can also create a stat bar from scratch with {{{<div>}}} and {{{<span>}}} elements. For examples:
+{{{
+ → Single Stat: 
+    <div class="statBarContainer">
+        <div class="statBar" @style="'width:' + $var + '%;'"></div>
+    </div>
+}}}
+<<SimpleStat>>
+{{{
+ → Opposite Pair
+    <div class="statBarContainer">
+        <div class="statBar" @style="'width:' + $var + '%;'">Destiny: $var%</div>
+        <div class="statDouble">Failure: <<print 100-$var>>%</div>
+    </div>
+}}}
+<<DoubleStat>>
+<details><summary>The Styling of for those bars</summary>
+It's ugly, but it works. The point is that you can do whatever!
+Also should go in your StyleSheet:
+{{{
+    .statBarContainer {
+        background: #660303;
+        width: 100%;
+        height: 2em;
+        border-radius: 20px;
+        border: 2px solid #a40606;
+        position: relative;
+        color: yellow
+    }
+    .statBar {
+        background: linear-gradient(-90deg, #ff489e78, #b06eff, #ff489e78);
+        border-radius: 20px;
+        height: inherit;
+    }
+    .statDouble {
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+}}}
+</details>
+
+:: Achievements
+<h1>Notes on Achievements</h1>
+Unlike ChoiceScript, Twine does not come with a Built-In system for Achievements. There are not special functions to create or update the achievements. You will need to set it up manually, which can be relatively easy or more complex depending on the way chosen. This section will go over the different SugarCube substitutes for {{{*achievement}}} and {{{*achieve}}}.
+
+Creating achievements can be done in two major ways: through a variable or by relying on metadata (cache). There isn't much difference between the two methods, aside from how they are save: the Variable way will work closer to ChoiceScript's Achievements (applied to one playthrough), while the Metadata will apply to all playthroughs on a device (until the cache is deleted).
+> ''Note:'' for saves reason, the first method is more recommended.
+
+You will need to know which passages will trigger each of the achievements, as well as a separate passage where you will display those achievements (let's call it: {{{Achievements}}}). The actual display of the achievements will be done with [[conditional statements|TODO:]] for regular variables, and JavaScript functions for the MetaData.
+\
+<h2>Simple Variable Achievements</h2>\
+This is the most basic way of creating achievements, as it relies on simple variables to track whether an achievement has been earned or not. You can use either [[types of variables|TODO:]] for this: a regular variable for each achievement, or an object/array to group achievements inside one variable. 
+\
+<h3>Creating Achievements</h3>\
+These variables should be [[defined|TODO:]] in {{{StoryInit}}}.
+{{{
+    :: StoryInit
+    <<set $achievement1 to false>>
+    <<set $achievements to {}>>
+    <<set $achievements to []>>
+}}}
+> <small>In order: a simple variable, an object, and an array.</small>
+In the relevant passage where the achievement is earned, you will modify the variable to indicate this change:
+{{{
+    :: SavedThePrincess
+    <<set $achievement1 to true>>
+    <<set $achievements.savedP to true>>
+    <<set $achievements.push("Saved Princess")>>
+}}}
+> <small>In order: a simple variable, an object, and an array.</small>
+\
+<h3>Displaying Achievements</h3>\
+In the {{{Achievements}}} passage, you will code conditional statements to check whether an achievement has been earned, before displaying it on the page. Depending on the type of variable used, there will be slight differences:
+{{{
+    :: Achievements
+    <<if $achievement1 is true>>Achievement One Earned<</if>>
+    <<if $achievements.savedP is true>>You Saved The Princess!<</if>>
+    <<if $achievements.includes("Saved Princess")>>The Princess wasn't in another castle!<</if>>
+}}}
+> <small>In order: a simple variable, an object, and an array.</small>
+If you want to make it a bit more fancy, and display some text before the achievement is earned:
+{{{
+    :: Achievements
+    ~ Saved The Princess: 
+    <<if $achievement1 is true>>
+        You saved the Princess!
+    <<else>>
+        Rescue a VIP.
+    <</if>>
+}}}
+> <small>The return to line is not required, this is just to make the example clearer.</small>
+
+Repeat the conditional statements until all achievements are listed.
+\
+<h2>Memorize and MetaData</h2>\
+This method is a bit more complex, because you rely on JavaScript functions, and the player's cache. Essentially, you will tell the browser to "memorize" the achievement in its cache. 
+\
+<h3>Creating Achievements</h3>\
+There is no need to set up anything in advance, you can simply plop the code into the relevant passage (where the achievement is earned):
+{{{
+    :: SavedThePrincess
+    <<run memorize("achievementName", true)>>
+    <<run memorize("achievSavedP", true)>>
+}}}
+\
+<h3>Displaying Achievements</h3>\
+In the {{{Achievements}}} passage, you will code conditional statements to check whether the player's saved metadata with {{{recall()}}}, to see if the achievement is there:
+{{{
+    :: Achievements
+    <<if recall("achievementName") is true>>Achievement One Earned<</if>>
+    <<if recall("achievSavedP") is true>>You saved the Princess!<</if>>
+}}}
+Repeat the conditional statements until all achievements are listed.
+\
+<h2>The ChoiceScript version</h2>\
+If you want your code to be as similar to ChoiceScript's {{{.achievement}}}/{{{.achieve}}} code as possible (setting up the achievements and displaying them) you can do something like the following. This is essentially a more complex-looking version of the Simple Variable object form (see above), but with extra setup (a [[widget|TODO:]]).
+\
+<h3>Creating Achievements</h3>\
+For this way to work, you will need to set up each of your achievements as objects, which will include all the information about that achievement. You will have to define those objects in {{{StoryInit}}}.
+{{{
+    :: StoryInit
+    <<set $codename to {
+        gotten: true/false,
+        visible: true/false,
+        pointValue: number,
+        title: "Tile",
+        preEarned: "Description Pre-Earned",
+        postEarned: "Description Achieved"
+    }>>
+
+ → Example:
+    <<set $savedP to {
+        gotten: false,
+        visible: true,
+        pointValue: 50,
+        title: "Saved The Princess",
+        preEarned: "Rescue a VIP",
+        postEarned: "You saved the Princess!"
+    }>>
+}}}
+> ''Note:'' if {{{visible}}} is //false//, you won't need the line {{{preEarned}}}.
+\
+<h3>Setting up the Widgets</h3>\
+To make the rest of the implementation easier, you will need to add the following widgets to your project, in a passage [[tagged|TODO:]] {{{widget}}} and {{{nobr}}}. The first widget will do the same thing as {{{.achieve}}}, while the second will make displaying the achievements easier on the page (it will take into account whether it should be visible or not).
+{{{
+    :: Widget [widget nobr]
+    <<widget "achieve">>
+        <<set _args[0].gotten to true>>
+    <</widget>>
+
+    <<widget "achievement">>
+        <<if _args[0].gotten || _args[0].visible>>
+            ''<<print _args[0].title>>:''
+        <</if>>
+        <<if _args[0].gotten>>
+            <<print _args[0].postEarned>> (<<print _args[0].pointValue>>)
+        <<elseif _args[0].visible>>
+            <<print _args[0].preEarned>> (<<print _args[0].pointValue>>)
+        <</if>>
+    <</widget>>
+
+}}}
+> <small>If you are only copying/pasting the code for Twine, don't select the first line.</small>
+\
+<h3>Updating the Achievement</h3>\
+When your widgets are ready, you can use them in your relevant passage, where the achievement is earned:
+{{{
+    :: SavedThePrincess
+    <<achieve $codename>>
+    <<achieve $savedP>>
+}}}
+\
+<h3>Displaying Achievements</h3>\
+And finally, you can set up your achievements' page by using the second widget:
+{{{
+    :: Achievements
+    <<achievement $codename>>
+    <<achievement $savedP>>
+}}}
+Repeat until all achievements are listed.
+\
+<h2>Notifying the Player</h2>\
+SugarCube does not come with its own notification element, like ChoiceScript does when a new Achievement is earned. But there are ways to notify the player when they got an achievement: either as plain text on the page, a popup to dismiss, or through a custom macro creating a special notification similar to ChoiceScript's.
+> //Plain Text//:
+{{{
+    :: SavedThePrincess
+    <<set $achievement1 to true>>
+    //Achievement Earned!//
+    <hr>
+}}}
+> //Popup//:
+{{{
+    :: SavedThePrincess
+    <<set $achievement1 to true>>
+    <<script>>
+        Dialog.create('Achievement Earned!');
+        Dialog.wiki("Yay! you did it!");
+        Dialog.open();
+    <</script>>
+}}}
+''Note:'' Chapel has a neat [[popup set|https://github.com/ChapelR/custom-macros-for-sugarcube-2/blob/master/docs/dialog-api-macro-set.md]] to make popups less daunting to set up.
+> //Custom Macro//:
+In this case, how to set up the notification will depend on the specific custom macro you choose. Chapel's [[notify macro|https://github.com/ChapelR/custom-macros-for-sugarcube-2/blob/master/docs/notify-macro.md]] and Sjoerd [[Flash macro|https://github.com/SjoerdHekking/custom-macros-sugarcube2/tree/main/Notification]] are the most well known/established custom macro to create notifications.
+''Note:'' Sjoerd's macro is more ARIA-accessible for screen readers than Chapel's.
