@@ -8,12 +8,7 @@
     > <<link "Difference in Game Folders" "Folder">><</link>>
     > <<link "Scenes and Passages" "Scenes">><</link>>
     
-    > <<link "Variable types and Setting them" "CSVariable">><</link>>
     > <<link "Input Macros" "Input">><</link>>
-    > <<link "Displaying Variables" "PrintV">><</link>>
-
-    > <<link "Conditional Statements" "IfElse">><</link>>
-    > <<link "Choices and Passages" "Choices">><</link>>
     > <<link "*goto and Calling Scenes" "GoTo">><</link>>
     > <<link "Ending Page" "Ending">><</link>>
 
@@ -74,85 +69,6 @@
     As well, the formatting of [[Passages]] name is very similar to the ones of Scenes (save for punctuation), with their name also being case-sensitive.
     CScript: <nowiki> *label PassageName</nowiki>
     Twee: <nowiki>:: PassageName </nowiki>
-
-:: PrintV [cscript]
-    <<code>><center><h1>Displaying Variables</h1></center>
-    Displaying variables in Twine/Twee is not as straightforward as in CScript, as it will depend on the type of variable.
-    \
-    <h2>Basic Display</h2>\
-    CScript:<code>${var}</code>
-    Twee:<code>_temp : will display the value of _temp
-    $variable : will display the value of $variable
-    $object.name : will display the value of "name" inside the object.
-    $array.[0] : will display the first item in the array.
-    <nowiki><<print setup.variable>> or <<= setup.variable>></nowiki>: will display JS variables.
-    </code>\
-    ''Note:'' <nowiki><<print>></nowiki> and <nowiki><<= >></nowiki> will also work for the other variables. For arrays, counting items starts at 0, with 0 being the first item (unlike CScript, which starts at 1).
-    <h2>Function Display</h2>\
-    To capitalise a variable or display it in uppercase or lowercase, Twine/Twee will use a Function (a JavaScript function). as such, you will need to use <nowiki><<print>></nowiki> or <nowiki><<= >></nowiki>.
-    CScript:<code>$!{var} for Capitalisation, $!!{var} for Uppercase</code>
-    Twee:<code><nowiki><<print $test.toUpperFirst()>> or <<= $test.toUpperFirst()>></nowiki>: will display the variable capitalised
-    <nowiki><<print $test.toUpperCase()>> or <<= $test.toUpperCase()>></nowiki>: will display the variable in uppercase.
-    <nowiki><<print $test.toLowerCase()>> or <<= $test.toLowerCase()>></nowiki>: will display the variable in lowercase.</code>\
-    ''Note:'' You can also use those JavaScript functions to set a variable or change its value (ex: <nowiki><<set $variable to $test.toLowerCase()>></nowiki> )
-    <h2>Extract Letter</h2>\
-    If you wish to, you can also extract a letter from a string. This is also done with a JavaScript function in Twine/Twee.
-    CScript: <code>${word#1}</code>\
-    Twee: <code><nowiki><<= $word.charAt(0)>></nowiki></code>\
-    ''Note:'' In JavaScript, counting items starts at 0, with 0 being the first item.
-    
-    If you want to display the last letter of a variable but you don't know how long the value is you can use:
-    CScript: <code>${word#length(word)}</code>\
-    Twee: <code><nowiki><<print $word.charAt($word.length - 1)>></nowiki></code>\
-
-:: IfElse [cscript]
-    <<code>><center><h1>Conditional Statements</h1></center>
-    The use of conditional statements between CScript and Twine/Twee are very similar and even use the same logic. A major difference is in their use, with Twine being able to check whether a variable is true or not regardless of its value (even if it is not a boolean).
-
-    Twine/Twee can use both TwineScript and JavaScript when coding conditional statements. For a non-exhaustive list, see the [[SugarCube documentation|http://www.motoslave.net/sugarcube/2/docs/#macros-macro-if]].
-
-    Inside <nowiki><<if>></nowiki> macros, you can set/change/unset variables, show a specific text, run some code, make a choice available, a link to another passage, etc...
-
-    Like most macros in SugarCube, you will need to include the closing markup for the macro to work, here <nowiki><</if>></nowiki>. If you do not, you will get an error on the page when testing it.
-    <h2>Comparing Variables</h2>\
-    ''Basic Comparison''
-    CScript:<code>*if (var1 = var2)</code>\
-    Twine/Twee:<code><nowiki><<if $var1 === $var2>><</if>> or <<if $var1 is $var2>><</if>></nowiki></code>\
-    CScript:<code>*if var1 != var2</code>\
-    Twine/Twee:<code><nowiki><<if $var1 !== $var2>><</if>> or <<if $var1 isnot $var2>><</if>></nowiki></code>
-    ''Greater/Lower than''
-    CScript:<code>*if var1 < var2 | *if var1 <= var2</code>\
-    Twine/Twee:<code><nowiki><<if $var1 < $var2>><</if>> or <<if $var1 lt $var2>><</if>></nowiki>
-    <nowiki><<if $var1 <= $var2>><</if>> or <<if $var1 lte $var2>><</if>></nowiki></code>\
-    CScript:<code>*if var1 > var2 | *if var1 >= var2 |</code>\
-    Twine/Twee:<code><nowiki><<if $var1 > $var2>><</if>> or <<if $var1 gt $var2>><</if>></nowiki>
-    <nowiki><<if $var1 >= $var2>><</if>> or <<if $var1 gte $var2>><</if>></nowiki></code>
-    ''Boolean''
-    CScript:<code>*if var1 | *if not (var2)</code>\
-    Twine/Twee:<code><nowiki><<if $var1 is true>><</if>> | <<if $var1 isnot true>><</if>></nowiki></code>
-    ''String:''
-    CScript:<code>*if (name = "Henry")</code>\
-    Twine/Twee:<code><nowiki><<if $name is "Henry">><</if>></nowiki></code>
-    ''Defined''
-    You can also check in Twine/Twee whether a variable is defined or not.
-    Twine/Twee:<code><nowiki><<if def $name>><</if>> | <<if ndef $name>><</if>></nowiki></code>\
-    <h2>And/Or/Not</h2>\
-    CScript:<code>*if (var1 < 10) and (var2 <= 4)</code>\
-    Twine/Twee:<code><nowiki><<if $var1 lt 10 and $var2 lte 4>><</if>> or <<if $var1 < 10 && $var2 <= 4 >><</if>></nowiki></code>\
-    CScript:<code>*if (var1 < 10) or (var2 <= 4)</code>\
-    Twine/Twee:<code><nowiki><<if $var1 lt 10 or $var2 lte 4>><</if>> or <<if $var1 < 10 || $var2 <= 4 >><</if>></nowiki></code>\
-    ''Note:'' For more complex conditional statement, it might be wiser to nest <nowiki><<if>></nowiki> macros inside another <nowiki><<if>></nowiki> or use the <nowiki><<for>></nowiki> macro.
-    <h2>Else/Elseif:</h2>\
-    As with CScript, Twine/Twee's else/elseif works the same way.
-    CScript:<code>*if (var < 30)
-    _ _text
-    *elseif (var < 60)
-    _ _text.
-    *else
-    _ _text!</code>
-    Twine/Twee:<code><nowiki><<if $var < 30>> text <<elseif $var < 60>> text. <<else>> text! <</if>></nowiki></code>\
-
-    ''Note:'' the <nowiki><<if>></nowiki> macro works like the Multireplace CScript code, since you are not forced to the whole code. Another way of doing Multireplace would be using the <nowiki><<switch>></nowiki> macros. More on that [[here|Miscellaneous]]. 
 
 :: Ending [cscript]
     <<code>><center><h1>Ending Page</h1></center>
@@ -241,68 +157,7 @@
     <nowiki><</switch>></nowiki></code>\
     ''Note:'' <nowiki>`passage()`</nowiki> in the link will tell the system to go again in that passage (:: Passage 2, here), but to include all changed values of variable (here, the value of $text in the link). However, it is recommended to use {{{<<link "Next" >><<replace '.passage'>><<include `passage()`>><</replace>><<set $text +=1>><</link>>}}} instead.
 
-:: Choices [cscript]
-    <<code>><center><h1>Choices and Passages</h1></center>
-    As mentioned in [[this page|Scenes]], the structure of choices are a bit different between both systems. While there is a way to mimic CScript choice indent structure (see below), it is not recommended to use this function indefinitely. Instead, it is best to create a new passage after a choice or a page break. You do so in Twine/Twee by creating a link.
-
-    <h2>Choices and Fake Choices</h2>\
-    Twine/Twee does not make a difference between a real choice and a fake choice in coding. The main differences are: whether you include a change of variable, widget or other kind of code, inside the link; and not needed functions like *finish or *ending or *goto.
-
-    CScript: <code>*choice
-    _ _#choice1
-    _ _ _ _ Text
-    _ _ _ _ *goto PassageName
-    _ _#choice1
-    _ _ _ _ *set variable +1
-    _ _ _ _ Different Text
-    _ _ _ _ *goto PassageName</code>
-    Twee:<code><nowiki><<links "Choice 1" "PassageName">><</link>></nowiki>
-    <nowiki><<links "Choice 2" "PassageName">><<set $variable to 1>><</link>></nowiki>
-    
-    :: PassageName
-    <nowiki><<if $variable is 1>>Different Text<<else>>Text<</if>></nowiki>
-    Rest of the Passage.</code>\
-    ''Note:'' You can also send the player to different passages depending on the choice picked. 
-
-    <h2>Layered Choices</h2>\
-    Layered Choices are possible in Twine/Twee but the result will appear different than with CScript. Instead of going to another page to show the next iteration of text and choice, the text will appear in the same page by replacing the choice list. While it can be useful, SugarCube 2 is not really built to handle a lot of layered choice to appear on one page (it is doable, but not recommended).
-
-    Twee: <code>:: PassageName
-    Text
-    <nowiki><span id="choice"></nowiki>
-    _ _ <nowiki><<link "Choice 1">><<replace "#choice">></nowiki>
-    _ _ _ _ Text that will appear
-    _ _ <nowiki><</replace>><</link>></nowiki>
-    _ _ <nowiki><<link "Choice 2">><<replace "#choice">></nowiki>
-    _ _ _ _ A different text to appear
-    _ _ <nowiki><</replace>><</link>></nowiki>
-    <nowiki></span></nowiki></code>\
     ''Note'': the <nowiki><<replace>></nowiki> macro can be used for other things, like create an error message for an [[input macro|Input]]. In order for that macro to work, it needs the item to be replace to be wrappped in the HTML <nowiki><span></nowiki> markup.
-
-    <h2>*selectable_if Choices</h2>\
-    Twine has a very similar way of showing a choice if conditions are met. It uses the same macro introduced in the [[Conditional Statement page|IfElse]]: the <nowiki><<if>></nowiki> macro.
-
-    CScript: <code>*choice
-    _ _ *selectable_if (var) #choice 1</code>\
-    Twee: <code><nowiki><<if $var is true>><<link "Choice 1" "PassageName">><</link>><</if>></nowiki></code>\
-    
-    <h2>Reuse Choices</h2>\
-    There is no specific Reuse macro in SugarCube. However, since the principle is very similar to the *selectable_if function, we would use the <nowiki><<if>></nowiki> macro as well. In this case, you would need to create a condition to hide or disable the choice. The condition can be visiting a passage or whether a variable is a certain value. The *allow_reuse function would be a simple choice link.
-    CScript: <code>*label PassageName
-    *choice
-    _ _ *hide_reuse #choice 1
-    _ _ _ _ *goto PassageName
-    _ _ *disable_reuse #choice 2
-    _ _ _ _ *goto PassageName
-    _ _ *allow_reuse #choice 3
-    _ _ _ _ *goto PassageName
-    </code>\
-    Twee: <code>:: PassageName
-    Text
-    <nowiki><<if $var is true>><<link "Choice 1" "PassageName">><<set $var to false>><</link>><</if>></nowiki>
-    <nowiki><<if $var is true>><<link "Choice 2" "PassageName">><<set $var to false>><</link>><<else>>This Choice is disabled<</if>></nowiki>
-    <nowiki><<link "Choice 3" "PassageName">><</link>></nowiki></code>
-    ''Note:'' While the *disable_reuse changes how the choice is displayed on the page by greying it out, this is not automatic in Twine. You can choose to show a different text like in the example above, or show the same text wrappped in a <nowiki><div></nowiki> or <nowiki><span></nowiki> markup and create a new CSS class. This method can also be used for one-time choices where the player doesn't meet a certain condition.
 
 :: Input [cscript]
     <<code>><center><h1>Input Macros</h1></center>
@@ -349,57 +204,6 @@
         <nowiki><<option false>></nowiki>
         <nowiki><<option "∞" Infinity>></nowiki>
     <nowiki><</listbox>></nowiki></code>
-
-:: GoTo [cscript]
-    <<code>><center><h1>*goto and Calling Scenes</h1></center>
-    
-    Since Twine and CScript are created differently, some functions are not always translatable. This is the case with the *goto and *gosub functions. The closest equivalence could be the <nowiki><<include>></nowiki> macro or a customised <nowiki><<widget>></nowiki>. Instead of jumping to another line of the file, those function call on the text/code in another Passage (for <nowiki><<include>></nowiki>) or inside a widget. Due to this, you can include those functions in the middle of the displayed passage and still have choices under them. Neither will require some sort of return function.
-
-    ''Note:'' Those function can call the same passage or macro how many times or wherever you would want it to appear.
-    ''IMPORTANT'': the <nowiki><<goto>></nowiki> macro is not the *goto equivalent as it will send the player to <u>a completely new page</u>.
-
-    CScript: <code>*goto Next
-    {Some text/code}
-    *label Next</code>\
-    Twee: <code>:: Passage1
-    Some text
-    <nowiki><<include "Passage2">></nowiki>
-    More text. Maybe a choice.
-    
-    :: Passage2
-    Some more text</code>\
-
-    <h2>Include or Widgets</h2>\
-    Both <nowiki><<include>></nowiki> and <nowiki><<widget>></nowiki> work very similarly but are set differently. <nowiki><<include>></nowiki> will call upon a full Passage while <nowiki><<widget>></nowiki> will only show what is inside the macro. 
-    
-    <<include "Example">>
-
-    On the other hand, you have the <nowiki><<widget>></nowiki> macro, which needs to be set in a Widget Passage with a [[Widget Tag|Tags]]. You will also need to name the widget and refer it in your code by its name only. You can only name widgets with the basic alphabet, it won't accept numbers (as the first character) or special characters (at all). 
-    Since the widget only displays what is inside its tags, you can set as many widgets as you want in that Passage. Only the called widget will be used. For example, I use a widget to display the code for this guide differently compared to the rest of the text.
-
-    <code>:: Story Passage
-    Some text
-    <nowiki><<include "PassageName">></nowiki>
-    <nowiki><<StoryWidget>></nowiki>
-    
-    :: PassageName
-    Some text or code or both
-    
-    :: My Widgets But The Name Can Be Anything [widget]
-    <nowiki><<widget "StoryWidget">></nowiki>
-    Some text or code or both
-    <nowiki><</widget>></nowiki></code>\
-    ''Note:'' Some may argue that <nowiki><<widget>></nowiki> is superior to <nowiki><<include>></nowiki> as it pass parameters onto the widget (very useful with Pronouns Widgets, see the [[SugarCube Documentation|https://www.motoslave.net/sugarcube/2/docs/#macros-macro-widget]] for setting parameters).
-
-    <h2>*finish and *page_break</h2>\
-    There is no such function in Twine either, as any change of Passage is done by creating <nowiki><<link>></nowiki> where you indicate which Passage the game should send the player. You will need to create a link every time you want to send the player to another page or break the narrative wall-of-text. 
-
-    Twee:<code><nowiki><<links "Next" "PassageName">><</link>></nowiki>
-    <nowiki><<links "End Chapter" "PassageName">><</link>></nowiki></code>
-
-:: Example
-    To use the <nowiki><<include>></nowiki> macro, you will need to create a Passage to call upon. That passage can have just plain text, or code, or both. For example, this paragraph is being displayed thanks to the <nowiki><<include>></nowiki> macro. It is the only element in that Passage.
-
 :: Formatting [cscript]
     <<code>><center><h1>Formatting your Text</h1></center>
     There is more freedom in Twine/Twee to format your text, you can have more than just bold and italics. Since the compiled file becomes a HTML file, you can use any HTML markup to format your text. You can also use Twine/Twee specific markup as well. For the full list, see the [[SugarCube Documentation|http://www.motoslave.net/sugarcube/2/docs/#markup-style]]

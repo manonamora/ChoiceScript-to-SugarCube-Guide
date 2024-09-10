@@ -135,3 +135,453 @@ While this will be automatic for temporary variables when the player moves to a 
 }}}
 
 > ''Notes:'' for all possible ways to change a variable's value, you can find all accepted operators in the [[SugarCube documentation|http://www.motoslave.net/sugarcube/2/docs/#twinescript-operators]]. Modifying arrays is a bit more complex, requiring the use of [[methods|http://www.motoslave.net/sugarcube/2/docs/#methods-array]].
+
+:: Choices
+<h1>Having Choices and Linking Passages</h1>
+Because of the difference in structure between the two systems, creating choices and linking different parts of the game is also formatted differently. ChoiceScript allows you to indent your choices, nesting them within each other, ad infinitum, while SugarCube pushes you to separate each block through a page break or choices.
+
+This section will use the {{{[[link]]}}} markup extensively, but you can use the {{{<<link>>}}} macro if you prefer. In most cases, they are [[interchangeable|Commands]]. This Markup/Macro can both create a choice and a page break, and is essentially the way to connect sections of the story together.
+\
+<h2>A Simple Page Break</h2>\
+While SugarCube doesn't have a {{{*page_break}}} command, it is pretty simple to create a page break: a single link to a new passage.
+{{{
+ → ChoiceScript
+    Lorem Ipsum Lorem Ipsum Lorem Ipsum
+    *page_break
+
+    Lorem IpsumLorem IpsumLorem Ipsum
+
+ → SugarCube
+    :: Passage1
+    Lorem Ipsum Lorem Ipsum Lorem Ipsum
+    [[Next|Passage2]]
+
+    :: Passage2
+    Lorem IpsumLorem IpsumLorem Ipsum
+}}}
+\
+<h2>Simple Branching Choices</h2>\
+If your story branches out into two or more distinct paths (at least for a section/passage), you can also use links to those new passages to send the players down those paths.
+{{{
+ → ChoiceScript
+    Lorem Ipsum Lorem Ipsum Lorem Ipsum
+    *choice 
+        #choice1 
+            *goto FirstPath
+        #choice2 
+            *goto SecondPath
+
+ → SugarCube
+    :: ChoicePassage
+    Lorem Ipsum Lorem Ipsum Lorem Ipsum
+    [[Choice1|FirstPath]]
+    [[Choice2|SecondPath]]
+
+    :: FirstPath
+    //Text of the First Path//
+
+    :: SecondPath
+    //Text of the Second Path//
+}}}
+\
+<h2>"Fake" Choices</h2>\
+Twine does not make a difference between a real and a fake choice when coding, only sending the player to a new section. It is still possible to emulate this "fake" choice with a combination of a link, a [[variable|Variables]], and a [[conditional statement|TODO:]].
+{{{
+ → ChoiceScript
+    Jolene taps her fingers on the desk, waiting for me to say something...
+    *fake_choice 
+        #You stay silent.
+            I chickened out.
+        #You plead.
+            I couldn't leave without saying something.
+    She looked at me, concerned.
+
+ → SugarCube
+    :: ChoicePassage
+    Jolene taps her fingers on the desk, waiting for me to say something...
+    [[You stay silent.|NextPassage][$silent to true]]
+    [[You plead.|NextPassage][$silent to false]]
+
+    :: NextPassage
+    <<if $silent is true>>I chickened out.<<else>>I couldn't leave without saying something.<</if>>
+    She looked at me, concerned.
+}}}
+\
+<h2>{{{*selectable_if}}} Choices</h2>\
+Similarly to ChoiceScript, SugarCube can displays //some// choices if the defined conditions are met, by using [[conditional statements|TODO:]].
+{{{
+ → ChoiceScript
+    For dinner, I think I'll have...
+    *choice 
+        *selectable_if (chicken) #... chicken.
+            *goto EatChicken
+        #... nothing.
+            *goto NoEating
+
+ → SugarCube
+    :: ChoicePassage
+    For dinner, I think I'll have...
+    <<if $chicken is true>>[[... chicken.|EatChicken]]<</if>>
+    [[... nothing.|NoEating]]
+}}}
+> ''Note:'' {{{*selectable_if}}} automatically greys out an unavailable option in ChoiceScript. In SugarCube, you will need to do this manually, by wrapping the "disabled" element in an {{{<span>}}} and adding styling. Like:
+> {{{<span style="background:grey;">Disabled Text</span>}}}
+> {{{<span class="disabled">Disabled Text</span>}}}
+> with the latter being styled in the [[Stylesheet|TODO:]]
+\
+<h2>Reuse Choices</h2>\
+While there are no comparable macros to the reuse commands in SugarCube, you can still emulate their functionalities by using [[conditional statements|TODO:]] to "disable" or hide choices. The difference between the two will be whether to add an {{{<<else>>}}} element to display the choice, but not allowing it to be selectable.
+{{{
+ → ChoiceScript
+    *label Dinner
+    For dinner, I think I'll have...
+    *choice 
+        *hide_reuse #... chicken.
+            *goto Dinner
+        *disable_reuse #... more rice.
+            *goto Dinner
+        *allow_reuse #... extra sauce.
+            *goto Dinner
+        #... nothing more.
+            *goto Done
+
+ → SugarCube
+    :: Dinner
+    For dinner, I think I'll have...
+    <<if $ateChicken is false>>[[... chicken.|Dinner][$ateChicken to true]]<</if>>
+    <<if $ateBeef is false>>[[... beef.|Dinner][$ateBeef to true]]<<else>>...beef<</if>>
+    [[... extra sauce|Dinner]]
+    [[... nothing.|Done]]
+}}}
+> ''Note:'' {{{*disable_reuse}}} automatically greys out an option in ChoiceScript. In SugarCube, you will need to do this manually, by wrapping the "disabled" element in an {{{<span>}}} and adding styling. Like:
+> {{{<span style="background:grey;">Disabled Text</span>}}}
+> {{{<span class="disabled">Disabled Text</span>}}}
+> with the latter being styled in the [[Stylesheet|TODO:]]
+\
+<h2>Nested Choices</h2>\
+Nested choices are also possible in SugarCube, though they will appear differently than in ChoiceScript. Rather than going to another page, the choice list will be replaced with the new text. Like with ChoiceScript, you can nest as many choices as you'd like (though by the 2nd-3rd nest, it may become difficult to keep track of the options).
+> ''Note:'' refreshing the page after clicking on a nested choice will undo any change made, since Twine only saves when players move to a new passage.
+\
+To do this, you will need to use one of the more advanced macro: {{{<<replace>>}}}.
+{{{
+ → ChoiceScript
+    What do you want?
+    *choice
+        #A donut.
+            What flavour?
+            *choice
+                #Chocolate.
+                    Too bad, here's a vanilla!
+                #Vanilla.
+                    Too bad, here's a chocolate!
+        #Nothing.
+            K.
+
+ → SugarCube
+    What do you want?
+    <span id="the-choice">
+        <<link "A Donut.">>
+            <<replace "#the-choice">>
+                A Donut.
+                What flavour?
+                <span id="the-taste">
+                    <<link "Chocolate">>
+                        <<replace "#the-taste">>
+                            Too bad, here's a vanilla!
+                        <</replace>>
+                    <</link>>
+                    <<link "Vanilla">>
+                        <<replace "#the-taste">>
+                            Too bad, here's a chocolate!
+                        <</replace>>
+                    <</link>>
+                </span>
+            <</replace>>
+        <</link>>
+        <<link "Nothing.">>
+            <<replace "#the-choice">>
+                K.
+            <</replace>>
+        <</link>>
+    </span>
+}}}
+
+:: Print
+<h1>Displaying the Values of Variables</h1>
+Displaying variables in SugarCube is relatively similar to ChoiceScript for simple value printing. However, it starts to become a bit more complex when trying to add functions.
+\
+<h2>Basic Display</h2>\
+Essentially, simply add the variable on the page, and it will display the value as-is on the page.
+{{{
+ → ChoiceScript
+    ${var}
+        ${chicken}
+
+ → SugarCube
+    _temp
+        _choice1
+    $variable 
+        $relationship
+    $object.property
+        $pronoun.he
+    $array.[i]
+        $inventory[0]
+}}}
+> ''Note:'' the full array can be displayed on the page by simply coding {{{$array}}}, but full objects {{{$object}}} will display an error ({{{[object Object]}}}).
+\
+For JavaScript variables, you should use the {{{<<print>>}}} or {{{<<=>>}}} macro to display the value. You can also use this macro for all variables.
+{{{
+    <<print setup.variable>>
+        <<print setup.infoDrink>>
+}}}
+\
+<h2>Function Display</h2>\
+To change the letter case of a value, SugarCube requires from functions (JavaScript) to be attached to the variable. It is pretty easy to differentiate between the functions. With the following, the {{{<<print>>}}}/{{{<<=>>}}} macro is required:
+{{{
+ → ChoiceScript
+    $!{var}
+        $!{capitalise}
+    $!!{var}
+        $!!{uppercase}
+
+ → SugarCube
+    <<print $var.toUpperFirst()>>
+    <<print $var.toUpperCase()>>
+    <<print $var.toLowerCase()>>
+}}}
+> ''Note:'' you can also use those functions to modify the letter case of a variable.
+> {{{<<set $var to $var.toLowerCase()>>}}}
+\
+<h2>Extract Letters</h2>\
+If you wish to, you can also extract a letter from a [[string variable|TODO:]], by using the JavaScript function: {{{.charAt(i)}}}.
+> ''Note:'' this function is pure JavaScript, and thus undocumented in SugarCube.
+{{{
+ → ChoiceScript
+    ${var#i}
+        ${word#1}
+    ${var#length(var)}
+
+ → SugarCube  
+    <<print $var.charAt(i)>>
+        <<print $word.charAt(0)>>
+    <<print $var.charAt($var.length - 1)>>
+}}}
+> ''Note:'' while ChoiceScript will count the first letter as {{{1}}}, JavaScript will look at the string like an array, which starts at position {{{0}}}.
+
+:: IfElse
+<h1>Displaying Variation and Conditional Statements</h1>
+The logic behind Conditional Statements are pretty much the same between ChoiceScript and SugarCube, with the latter having a couple extra options.
+
+{{{<<if>>}}} is a container macro, requiring a starting ({{{<<if>>}}}) and closing ({{{<</if>>}}}) element. Inside, you can add alternative conditions, with {{{<<elseif>>}}} and {{{<<else>>}}}.
+{{{
+    <<if [condition]>>
+        /* Something happens */
+    <<elseif [condition]>>
+        /* Something happens */
+    <<else>>
+        /* Something happens */
+    <</if>>
+}}}
+
+Like its ChoiceScript counterpart, the {{{<<if>>}}} macro can do more than just display variation: set/modify variables, run code, make a choice/link (un)available, etc... It can also be nested inside other macros (including other {{{<<if>>}}}).
+{{{
+    <<link "Check?">>
+        <<if $answer is true>>
+            <<goto "Next">>
+        <<else>>
+            <<goto "Fail">>
+        <</if>>
+    <</link>>
+
+    <<if $var is true>>
+        <<if passage() is "End">>
+            ...
+        <</if>>
+    <</if>>
+}}}
+\
+<h2>Basic Conditions</h2>\
+Below, you will find a table with the different substitutes between ChoiceScript and SugarCube (TwineScript), as well as JavaScript, since SugarCube is based on it. For the full list of accepted TwineScript operators, see [[the documentation|http://www.motoslave.net/sugarcube/2/docs/#twinescript-operators]]
+<<nobr>>
+<table>
+    <tr>
+        <th>ChoiceScript</th>
+        <th>TwineScript</th>
+        <th>JavaScript</th>
+    </tr>
+    <tr>
+        <td>{{{*if (var1 = var2)}}}</td>
+        <td>{{{<<if $var1 is $var2>>}}}</td>
+        <td>{{{<<if $var1 === $var2>>}}}</td>
+    </tr>
+    <tr>
+        <td>{{{*if (var1 != var2)}}}</td>
+        <td>{{{<<if $var1 isnot $var2>>}}}</td>
+        <td>{{{<<if $var1 !== $var2>>}}}</td>
+    </tr>
+    <tr>
+        <td>{{{*if (var1 < var2)}}}</td>
+        <td>{{{<<if $var1 lt $var2>>}}}</td>
+        <td>{{{<<if $var1 < $var2>>}}}</td>
+    </tr>
+    <tr>
+        <td>{{{*if (var1 <= var2)}}}</td>
+        <td>{{{<<if $var1 lte $var2>>}}}</td>
+        <td>{{{<<if $var1 <= $var2>>}}}</td>
+    </tr>
+    <tr>
+        <td>{{{*if (var1 > var2)}}}</td>
+        <td>{{{<<if $var1 gt $var2>>}}}</td>
+        <td>{{{<<if $var1 > $var2>>}}}</td>
+    </tr>
+    <tr>
+        <td>{{{*if (var1 >= var2)}}}</td>
+        <td>{{{<<if $var1 gte $var2>>}}}</td>
+        <td>{{{<<if $var1 >= $var2>>}}}</td>
+    </tr>
+    <tr>
+        <td>{{{*if var1}}}</td>
+        <td>{{{<<if $var1 is true>>}}}</td>
+        <td>{{{<<if $var1>>}}}</td>
+    </tr>
+    <tr>
+        <td>{{{*if not (var1)}}}</td>
+        <td>{{{<<if $var1 is false>>}}}</td>
+        <td>{{{<<if !$var1>>}}}</td>
+    </tr>
+    <tr>
+        <td>{{{*if (var1 = "words")}}}</td>
+        <td>{{{<<if $var1 is "words">>}}}</td>
+        <td>{{{<<if $var1 === "words">>}}}</td>
+    </tr>
+</table>
+<</nobr>>
+A very useful operator in SugarCube is {{{def}}} and {{{ndef}}}, which will respectively check whether the variable is defined or not.
+{{{
+    <<if def $var>>
+        /* Something happens */
+    <</if>>
+
+    <<if ndef $var>>
+        /* Something happens */
+    <</if>>
+}}}
+\
+<h2>{{{<<elseif>>}}} and {{{<<else>>}}}</h2>\
+If you have alternative variations that you want to display on the screen, or other code to run, you will use {{{<<elseif>>}}} for a defined condition and {{{<<else>>}}} for the rest. It works the same as with ChoiceScript.
+{{{
+ → ChoiceScript
+    *if (var < 30)
+        First variation?
+    *elseif (var < 60)
+        Second variation.
+    *else
+        The rest!
+
+ → SugarCube
+    <<if $var < 30>>
+        First variation?
+    <<elseif $var < 60>>
+        Second variation.
+    <<else>> 
+        The rest! 
+    <</if>>
+}}}
+> ''Note:'' if you are using multiple conditions, be sure to order them from most to least restrictive. Otherwise, the wrong variation will be run.
+\
+<h2>{{{AND}}} and {{{OR}}}</h2>\
+Like ChoiceScript, SugarCube uses both the {{{and}}} and {{{or}}} operators to add multiple conditions to one statement.
+{{{
+ → ChoiceScript
+    *if (var1 < 10) and (var2 <= 4)
+    *if (var1 < 10) or (var2 <= 4)
+
+ → SugarCube (TS)
+    <<if $var1 lt 10 and $var2 lte 4>>
+    <<if $var1 lt 10 or $var2 lte 4>>
+
+ → SugarCube (JS)
+    <<if $var1 < 10 && $var2 <= 4>>
+    <<if $var1 < 10 || $var2 <= 4 >>
+}}}
+> ''Note:'' while the examples do not have parentheses {{{ ( ) }}} around single conditions, those are recommended for operators like {{{def}}} and {{{ndef}}}. They will also be necessary for more complex statements:
+> {{{<<if ($turn is 4 or $pet is "dog") && ($name is "Jane" or $credit gt ($cost * 2))>>}}}
+\
+<h2>What about Multireplace?</h2>\
+While there is not special markup to create a Multireplace type of code, {{{<<if>>}}} is still the macro to use. While the examples above separated each condition from the variation and indented them, you can still use the macro in a single line:
+{{{
+    I ate an <<if $var < 30>> apple? <<elseif $var < 60>> apricot. <<else>> orange! <</if>>
+}}}
+There is also the {{{<<switch>>}}} macro, which will do a similar thing, as long as the condition checks only one variable and defined values:
+{{{
+    You <<switch $passed>>
+        <<case true>>passed
+        <<default>>failed
+    <</switch>> the test.
+
+    The man looks at you with <<switch $attitude>><<case 1>>hate<<case 2 3 4>>indifference<<case 5>>kindness<<default>>love<</switch>>.
+}}}
+For other use of the {{{<<switch>>}}} macro, see [[this page|TODO:]].
+
+:: GoTo 
+<h1>*goto and Calling Scenes</h1>
+Because Twine and ChoiceScript are [[structured differently]], there are functions that are not translatable between the two formats. This is the most apparent with the {{{*goto}}} and {{{*gosub}}} commands, as well as {{{*finish}}}.
+> ''Warning!'' SugarCube has a {{{<<goto>>}}} macro, which is not the {{{*goto}}} equivalent, because the player will be //''sent'' to a completely ''new'' page//. {{{<<goto>>}}} is like a link, without the required clicking.
+\
+The closest substitution for those {{{*goto}}} commands can be found with either the {{{<<include>>}}} macro or a customised {{{<<widget>>}}}. Instead of jumping to a specific line on the file, those macros will display the content of another Passage (for {{{<<include>>}}}) or of the widget. Thanks to this, you can call those macros at any point in the page.
+> ''Note:'' you can also call those macros as many time as you want, in the same or different passages.
+\
+These are especially useful to display variations or run code that should be included in multiple sections of the game.
+\
+<h2>Using {{{<<include>>}}}</h2>\
+The simplest way to create a {{{*goto}}}-like display is by using the {{{<<include>>}}} macro. For this, you will need two passages: the main one that the player will visit, and a second one which will include the text you want to display on the page or code you want to run.
+{{{
+ → ChoiceScript
+    *goto Next
+
+    {Some text/code}
+    
+    *label Next
+
+ → SugarCube
+    :: Passage 
+    Lorem Ipsum...
+    <<include "SidePassage">>
+    Lorem Ipsum... with a choice?
+
+    :: SidePassage
+    Some text or maybe some code.
+}}}
+\
+<h2>Using {{{<<widget>>}}}</h2>\
+Widgets are slightly more complex, as it requires one special [[tag|TODO:]] to define the macro. Like with {{{<<include>>}}}, you will need two passages: the main one that the player will visit, and a second one where you will define the widget. That second passage ''must'' have the tag {{{widget}}} attached to it.
+> ''Note:'' you can define as many widgets as you want in that widget passage.
+{{{
+    :: Passage 
+    Lorem Ipsum...
+    <<SideSection>>
+    Lorem Ipsum... with a choice?
+
+    :: The Widgets [widget]
+    <<widget "SideSection">>
+        Some text or maybe some code.
+    <</widget>>
+    <<widget "ForLater">>
+        Another defined widget.
+    <</widget>>
+}}}
+\
+<h2>{{{<<include>>}}} or {{{<<widget>>}}}?</h2>\
+While the player will experience those two macros the same way, the macros are coded quite differently, as shown by the examples above. The main difference is in the way the macros use the side passage: {{{<<include>>}}} will use the whole, while {{{<<widget>>}}} only cares for what is defined inside its macro.
+
+Another important point comes with namings. Since {{{<<include>>}}} require the name of a passage, that passage can include any characters, including whitespace and punctuation. On the other hand, {{{<<widget>>}}} can ''only'' be named with the basic alphabet ({{{a → z}}}, {{{A → Z}}}) and numbers (''except'' as the first character).
+
+Finally, {{{<<widget>>}}} allows for extra customisation, such as passing parameters (i.e. indicating a variable) or turning it into a container. This essentially turns it into a customised macro. This being more of an advanced option, see [[SugarCube Documentation|https://www.motoslave.net/sugarcube/2/docs/#macros-macro-widget]] for more details.
+\
+<h2>{{{*finish}}} a Scene</h2>\
+While this command is essential to tell the program to stop reading this particular scene, this isn't needed in Twine games, because of the Passage Structure. If you want to move the player to a new section of the game, like a new chapter, you only need to create a link to a new passage:
+{{{
+    [[End Chapter|Chapter85936759]]
+    <<link "End Chapter" "Chapter85936759">>
+}}}
+And, that's it.

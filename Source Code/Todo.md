@@ -12,10 +12,6 @@ TODO:
         -> Sugarcube Guide
 
 Structure ToC:
-    - Displaying Variables
-- New Passages and Choices
-- Conditional Statements
-- *goto and Calling Scenes 
 - Formatting your Text
 - Ending Page
 - Miscellaneous
