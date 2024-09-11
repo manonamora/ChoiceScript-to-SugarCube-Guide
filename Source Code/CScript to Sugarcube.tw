@@ -9,8 +9,6 @@
     > <<link "Scenes and Passages" "Scenes">><</link>>
     
     > <<link "Input Macros" "Input">><</link>>
-    > <<link "*goto and Calling Scenes" "GoTo">><</link>>
-    > <<link "Ending Page" "Ending">><</link>>
 
     > <<link "Formatting your Text" "Formatting">><</link>>
     > <<link "Miscellaneous" "Miscellaneous">><</link>>
@@ -69,26 +67,6 @@
     As well, the formatting of [[Passages]] name is very similar to the ones of Scenes (save for punctuation), with their name also being case-sensitive.
     CScript: <nowiki> *label PassageName</nowiki>
     Twee: <nowiki>:: PassageName </nowiki>
-
-:: Ending [cscript]
-    <<code>><center><h1>Ending Page</h1></center>
-    Twine/Twee does not have a function that ends a game like CScript *ending. Instead, you need create an "End" Page and send the player there (via a <nowiki><<link>></nowiki>).
-
-    However, this way allows you more way to customise the "End" Scene how ever you would want. You are not bound to the 4 CScript option or base text. 
-
-    <h2>Restart the Game</h2>\
-    There are two ways you can send player back to the start: force the game to restart or send the player back to the first page. The first one is similar to the ChoiceScript version, while the second is more often used as a NewGame+ option.
-
-    Whether to choose the first or second option depends on how you code the rest of the game. If your game's code relies on functions like <nowiki> hasVisited() </nowiki>, it is best to use the first option.
-
-    Twee:<code><nowiki><<link "Restart">><<script>>UI.restart();<</script>><</link>></nowiki>
-    <nowiki><<link "Restart" "Start">><</link>></nowiki></code>\
-    ''Note:'' You can replace the link for a button if you want.
-
-    <h2>Share the Game</h2>\
-    Twine/Twee does not have specific script to share the game to other websites, but you are free to add as many hyperlinks as you want (see [[Formatting]]).
-
-
 
 :: Miscellaneous [cscript]
     <<code>><center><h1>Miscellaneous</h1></center>
@@ -159,31 +137,11 @@
 
     ''Note'': the <nowiki><<replace>></nowiki> macro can be used for other things, like create an error message for an [[input macro|Input]]. In order for that macro to work, it needs the item to be replace to be wrappped in the HTML <nowiki><span></nowiki> markup.
 
+        -> {{{<<goto $var>>}}}
+        -> *rand diceroll
+        -> *params kinda like args
 :: Input [cscript]
-    <<code>><center><h1>Input Macros</h1></center>
-    Unlike CScript, you won't need to set a variable before using an input macro. That variable can be first seen in those macros, with the input setting the macro directly. You also have multiple ways to interactively input variables. All these macros are visible in the [[Basic Macros]] page.
 
-    CScript: <code>*input_text name
-    *input_number coins 50 100</code>\
-    Twee: <code><nowiki><<textbox "$name" "Henry">></nowiki>
-    <nowiki><<numberbox "$wager" 100>></nowiki></code>\
-    ''Note:'' both the textbox and numberbox can include an initial value (the last item before the >>), but it can be optional.
-
-    <h2>Other Input Macros</h2>
-    There are other Interactive Macros to input variables. For all macros included below, you can input numberical and string values. For some, you can also input a boolean value. 
-
-    ''Checkboxes''
-    Often use for character creation, especially for aspects where a player can have multiple choices, or for inventory. For the full customisation, see the [[SugarCube Documentation|https://www.motoslave.net/sugarcube/2/docs/#macros-macro-checkbox]]
-    <code><nowiki>* <<checkbox "$item1" false true>> Item 1?</nowiki>
-    <nowiki>* <<checkbox "$item2" false true>> Item 2?</nowiki>
-    <nowiki>* <<checkbox "$item2" false true>> Item 3?</nowiki></code>
-    ''Note:'' Instead of boolean, you can assign other types of values when an option is checked or not. 
-
-    ''Radiobutton''
-    Similarly to the previous macro, it is open used in Character creation but when players can only choose one option. For the full customisation, see the [[SugarCube Documentation|https://www.motoslave.net/sugarcube/2/docs/#macros-macro-radiobutton]]
-    <code><nowiki>* <<radiobutton  "$item" "blue">> Type 1?</nowiki>
-    <nowiki>* <<radiobutton  "$item" 1>> Type 2?</nowiki>
-    <nowiki>* <<radiobutton  "$item" true>> Type 3?</nowiki></code>\
 
     ''Cycling''
     With this macro, you can create a fake link, which, when clicked on, will cycle through options. For the full customisation, see the [[SugarCube Documentation|https://www.motoslave.net/sugarcube/2/docs/#macros-macro-cycle]]
@@ -223,6 +181,8 @@
     Twee : <code><nowiki>@@style-list;Text@@</nowiki>
     <nowiki><span style="style-list">Text</span></nowiki></code>\
     ''Note:'' Text alignment works the same way, though you may need to use <nowiki> <p> </nowiki> or <nowiki> <div> </nowiki> instead of <nowiki> <span> </nowiki>.
+
+    -> {{{*image}}} + alignment + alt
 
 :: Templates [cscript]
     <center><h1>Useful Templates and Documentation</h1></center>

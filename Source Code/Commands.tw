@@ -524,8 +524,8 @@ There is also the {{{<<switch>>}}} macro, which will do a similar thing, as long
 For other use of the {{{<<switch>>}}} macro, see [[this page|TODO:]].
 
 :: GoTo 
-<h1>*goto and Calling Scenes</h1>
-Because Twine and ChoiceScript are [[structured differently]], there are functions that are not translatable between the two formats. This is the most apparent with the {{{*goto}}} and {{{*gosub}}} commands, as well as {{{*finish}}}.
+<h1>*goto for Calling Scenes and Endings</h1>
+Because Twine and ChoiceScript are [[structured differently]], there are functions that are not translatable between the two formats. This is the most apparent with the {{{*goto}}} and {{{*gosub}}} commands, as well as {{{*finish}}} and {{{*ending}}}.
 > ''Warning!'' SugarCube has a {{{<<goto>>}}} macro, which is not the {{{*goto}}} equivalent, because the player will be //''sent'' to a completely ''new'' page//. {{{<<goto>>}}} is like a link, without the required clicking.
 \
 The closest substitution for those {{{*goto}}} commands can be found with either the {{{<<include>>}}} macro or a customised {{{<<widget>>}}}. Instead of jumping to a specific line on the file, those macros will display the content of another Passage (for {{{<<include>>}}}) or of the widget. Thanks to this, you can call those macros at any point in the page.
@@ -585,3 +585,59 @@ While this command is essential to tell the program to stop reading this particu
     <<link "End Chapter" "Chapter85936759">>
 }}}
 And, that's it.
+\
+<h2>Ending the Game</h2>\
+As mentioned above there is no equivalence to the {{{*ending}}} command to //End// the game, and include restarting or sharing buttons. In Twine, a game will end when the player has no other link to the progress the story further. This means that you will have more control over the customisation of this final page.
+\
+<h3>Restart the Game</h3>\
+Unlike in ChoiceScript, you have two different ways to restart the game: with the {{{UI.restart()}}} API or a regular link sending the player back to the starting page. The first is the equivalent to the ChoiceScript //Play Again// choice, while the second allows the inclusion of a [[NewGame+|https://en.wikipedia.org/wiki/New_Game_Plus]] option.
+> ''Note:'' using the passage [[functions|http://www.motoslave.net/sugarcube/2/docs/#functions]], like {{{hasVisited()}}}, is not compatible with NewGame+.
+{{{
+    <<link "Restart">><<run UI.restart()>><</link>>
+    [[Restart|Start]]
+}}}
+> ''Note:'' you are not limited to a link, you can use the {{{<<button>>}}} macro instead.
+\
+<h3>Share the Game</h3>\
+Twine does not have a specific script that will allow players to share the game on other platforms. If you want a specific //Share to [Platform]// link, you will need to create it yourself (or check for a plain HTML plug-in on the internet). Though, you are still free to add as many [[external hyperlinks|TODO:]] as you want (e.g. towards a promotional post on Tumblr).
+
+:: Input
+<h1>Add Player Input and Interactivity</h1>
+Along with the equivalence of {{{*input_text}}} and {{{*input_number}}} from ChoiceScript, SugarCube includes many interactive macros to let player input elements, choose options, or simply add Interactivity to the page. These macros can define and/or modify variables when interacted with.
+\
+<h2>Text and Number Input</h2>\
+The equivalent SugarCube macros for {{{*input_text}}} and {{{*input_number}}} are respectively {{{<<textbox>>}}} and {{{<<numberbox>>}}}. A major difference between the commands and the macro is that SugarCube allows an initial value to be indicated in the inputbox (and it's optional).
+{{{
+ → ChoiceScript
+    *input_text name
+    *input_number coins 50 100
+
+ → SugarCube
+    <<textbox "$name" "Henry">>
+    <<numberbox "$wager" 100>>
+}}}
+> ''Note:'' you can't indicate a range for input in the {{{<<numberbox>>}}}, but you can get the [[Numberpool custom macro|http://www.motoslave.net/sugarcube/2/#downloads]] to do the job.
+\
+<h2>Other Interactive Macros</h2>\
+Aside from regular [[links|TODO:]] and the input macros above, there are 4 extra interactive macros that you can add to your project. These macros can define and/or modify variables to include string, numerical, and boolean values.
+\
+<h3>Checkboxes</h3>\
+Often used for character creations or for inventory, the {{{<<checkbox>>}}} allows players to select multiple choices at once. For the full customisation, see the [[SugarCube Documentation|https://www.motoslave.net/sugarcube/2/docs/#macros-macro-checkbox]]
+{{{
+    <<checkbox "$var" [unchecked] [checked]>>
+
+    * <<checkbox "$item1" false true>> Item 1?
+    * <<checkbox "$item2" 0 1>> Item 2?
+    * <<checkbox "$item3" "no-tats" "tattooed">> Item 3?
+}}}
+> ''Note:'' you cannot have two {{{<<checkbox>>}}} with the same variable on the screen.
+\
+<h3>Radiobuttons</h3>\
+This macros is similar to the previous one, except that the player can only select //one// of the options. Visually, it is similar to the choice options in ChoiceScript. {{{<<radiobutton>>}}} is mainly used in character creation. For the full customisation, see the [[SugarCube Documentation|https://www.motoslave.net/sugarcube/2/docs/#macros-macro-radiobutton]]
+{{{
+    <<checkbox "$var" [value]>>
+
+    * <<radiobutton  "$item" "blue">> Type 1?
+    * <<radiobutton  "$item" 1>> Type 2?
+    * <<radiobutton  "$item" true>> Type 3?
+}}}

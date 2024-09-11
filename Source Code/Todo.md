@@ -13,7 +13,6 @@ TODO:
 
 Structure ToC:
 - Formatting your Text
-- Ending Page
 - Miscellaneous
     - Special passages?
     - tags
@@ -23,3 +22,6 @@ Structure ToC:
 
 
 Add something somewhere that new passages are like labels, if labels also started a page break?
+
+Need an index
+Keep the extra in there though

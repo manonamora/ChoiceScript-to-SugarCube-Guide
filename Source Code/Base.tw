@@ -30,11 +30,13 @@ And, if you do not feel comfortable coding in the Twine App, this guide will go 
 *** [[Displaying the Values of Variables|Print]]
 ** [[Having Choices and Linking Passages|Choices]]
 ** [[Displaying Variation and Conditional Statements|IfElse]]
-** [[*goto and Calling Scenes|GoTo]]
+** [[*goto for Calling Scenes and Endings|GoTo]]
+** [[Add Player Input and Interactivity|Input]]
 * [[Starting your Project|Startup]]
 ** [[Letting the Player Save|Saves]]
 ** [[Creating a Stats Page|Stats]]
 ** [[Notes on Achievements|Achievements]]
+** [[Title and Ending page?]]
 
 
 :: About
