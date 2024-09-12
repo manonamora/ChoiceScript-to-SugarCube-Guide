@@ -1,73 +1,109 @@
 :: Structures
 <h1>Understanding the Differences in Structures</h1>
-Though the end product plays the same, and there will be similarities in coding logic, ChoiceScript and Twine are still structured quite differently. And because of those differences, it can be challenging to go from one program to the other.
+Though the end product plays the same, and there are similarities in coding logic, ChoiceScript and Twine are still structured quite differently. And because of those differences, it can be challenging to go from one program to the other.
 
-The first major difference is in how you will code your project. Twine comes with an IDE, which means you can open the program, start a new project, code it, and compile, in one single window. ChoiceScript, on the other hand, does not - requiring a third-party program to code, only handling compiling. As such, ChoiceScript is more comparable to [[Tweego|About]], a Twine-format compiler.
+The first major difference is in how you will code your project. Twine comes with an IDE, which means you can open the program, start a new project, code it, and compile, in one single window. ChoiceScript, on the other hand, does not - requiring a third-party IDE program to code, only handling compiling. As such, ChoiceScript is more comparable to [[Tweego|About]], a Twine-format compiler.
 TODO: Screenshot Twine
 
-Creating a new project in ChoiceScript will require the {{{startup.txt}}} file to be filled accordingly, defining the project's title, listing all scene files to be played, and defining variables. Twine will only require you to input the title of your project, setting up the rest for you (though you //might// need to define //some// [[variables|TODO:]]). However, if you are using Tweego, [[some information|TODO:]] will need to be manually entered.
+Creating a new project in ChoiceScript will require the {{{startup.txt}}} file to be filled accordingly, defining the project's title, listing all scene files to be played, and defining variables. Twine will only require you to input the title of your project, setting up the rest for you (though you //might// need to define //some// [[variables|Variables]]). However, if you are using Tweego, [[some information|Startup]] will need to be manually entered.
 TODO: Screenshot Twine creating new Project
 
-When you open the project's file setup, ChoiceScript will have multiple scene files ({{{.txt}}}), each containing the code for multiple sections of a scene. On the other hand, Twine will show its singular document in a visual map, displaying the passage as separate blocks of code (editable and moveable). In that regard, ChoiceScript is once again more comparable to Tweego, which lets creators organise their passages into separate Twee files ({{{.tw}}}), as they see fit (as long as the [[Twee Notation|TwineorTwee]] is being respected).
+When you open the project's file setup, ChoiceScript will have multiple scene files ({{{.txt}}}), each containing the code for multiple sections of a scene. On the other hand, Twine will show its singular document in a visual map, displaying the passage as separate blocks of code (editable and moveable). In that regard, ChoiceScript is once again more comparable to Tweego, which lets creators organise their passages into separate Twee files ({{{.tw}}}), as they see fit and in whatever order (as long as the [[Twee Notation|TwineOrTwee]] is being respected).
 TODO: Screenshot Twine project open
-
-Another major difference is how each program will look at the code. While they //both// reach code from top to bottom, ChoiceScript goes through each scene file (containing multiple pages), while Twine focuses on passages (each being a page). That difference in focus (scene file vs passage) affects how each page is both coded alone and connected to other pages. ChoiceScript links pages with page breaks, moving between labels, and ending scene files. Twine does it simply through [[links between passages|TODO:]].
-
-Finally, ChoiceScript is heavily dependent on indentation to structure its code, as it helps the format differentiate between code and narration, as well as different types of code. For Twine, indentation is only important when it comes to [[styling markup|TODO:]], since the code itself has its own formatting (defined by each format, SugarCube using {{{ << >> }}}).
 {{{
-    → ChoiceScript
-*choice
-    #choice1
-        *goto PassageName
-    ...
+ → ChoiceScript
+    Lorem Ipsum
+    *choice
+        #choice 1
+            First Variation
+        #choice 2
+            Second Variation
 
-    → SugarCube
-<<link "choice1" "PassageName">><</link>>
+ → SugarCube
+    :: Start
+    Lorem Ipsum...
+    [[Choice 1|Next1]]
+    <<link "Choice 2" "Next2">><</link>>
+
+    :: Next1 
+    First Variation
+    
+    :: Next2
+    Second Variation
+    
 }}}
 
-:: TwineorTwee
+Another major difference is how each program will look at the code. While they //both// reach code from top to bottom, ChoiceScript goes through each scene file (containing multiple pages), while Twine focuses on passages (each being a page). That difference in focus (scene file vs passage) affects how each page is both coded alone and connected to other pages. ChoiceScript links pages with page breaks, moving between labels, and ending scene files. Twine does it simply through [[links between passages|Choices]].
+
+So while ChoiceScript differentiates sections with Scenes, Twine does so with Passages. Though a more accurate comparison would be between a Passage and a {{{*label}}} section, if that section only included text and choices (no page-break/subroutines).
+{{{
+ → ChoiceScript
+    *label NewSection
+    Lorem Ipsum and Commands...
+
+ → SugarCube
+    :: NewPassage
+    Lorem Ipsum and Macros...
+}}}
+> ''Note:'' some passages are more special than others, either because of their [[Special Names|SpeP]] or their [[Tags]].
+
+Finally, ChoiceScript is heavily dependent on indentation to structure its code, as it helps the format differentiate between code and narration, as well as different types of code. For Twine, indentation is only important when it comes to [[styling markup|Formatting]], since the code itself has its own formatting (defined by each format, SugarCube using {{{ << >> }}}).
+{{{
+ → ChoiceScript
+    *choice
+        #choice1
+            *goto PassageName
+    ...
+
+ → SugarCube
+    <<link "choice1" "PassageName">><</link>>
+}}}
+
+:: TwineOrTwee
 <h1>Coding in Twine or in Twee?</h1>
 There is no right or wrong answer to this question. Both Twine and Twee ({{{.tw}}} files) have their advantages and disadvantages. It essentially comes down to preferences in how the code is displayed on the screen and how you want your passages to be organised.
 \
 <h2>Using Twine</h2>\
 Twine is often seen as the easy way since it:
-* will set up the important passages for you (metadata & starting passage) when you create a new project
-* has a visual representation of your project's structure (linked blocks on a map, that you can move around)
-* automatically create new passages as when you code links (in [[markup formatting|TODO]] only)
-** or you click a button in the menu
-* let you test your project from the start or a specific passage with one click
-* has a special passage for JavaScript and the StyleSheet
-* will compile your project with one click (in HTML or Twee)
-* can hold as many projects as your browser's cache/device's free space allows
+* will set up the important passages for you (metadata & starting passage) when you create a new project.
+* has a visual representation of your project's structure (linked blocks on a map, that you can move around).
+* automatically create new passages as when you code links (only for the {{{[[link]]}}} markup).
+** or you click a button in the menu.
+* lets you test your project from the start or a specific passage with one click.
+* has a special passage for JavaScript and the StyleSheet.
+* will compile your project with one click (in HTML or Twee).
 \ 
 However:
-* Twine has no syntax highlighter for the code (only SugarCube)
-* the visual map may lag a bit if your project has too many passages (2-300~ passages, depends if on browser or the installed app)
-* the //find// function is not great
-* you can only open one passage at a time
+* SugarCube has no syntax highlighter for the code or macro/styling menu (only Harlowe/Chapbook does).
+* the visual map may lag a bit if your project has too many passages (3-500~ passages, depends if on browser or the installed app).
+* the //find// function is not great, the //replace// is worse.
+* you can only open one passage at a time.
+* Twine can only hold as many projects as your browser's cache/device's free space allows (which is quite big).
+** Deleting your cache will delete any Twine project saved in your browser.
 \
 <h2>Using Twee files</h2>\
 Twee ({{{.tw}}}) files are similar to regular {{{.txt}}} files, which you can open and edit with any IDE. In this format, passages are listed one after the other, each defined with the Twee Notation (see below).
 
 Twee might be best for you if you:
-* prefer a coding environment closer to ChoiceScript
-* want more control when organising your passages (e.g. in multiple files, like ChoiceScript)
-* don't care about the visual map 
-* like to have multiple passages opened during coding 
-* want a better way to search through your code
-* want a syntax highlighter (see below)
-* are using Tweego
+* prefer a coding environment closer to ChoiceScript.
+* want more control when organising your passages (e.g. in multiple files, like ChoiceScript).
+* want to organise your (infinite amount of) projects however you want (and not just in one library folder/cache).
+* don't care about the visual map.
+* like to have multiple passages opened during coding.
+* want a better way to search through your code.
+* want a syntax highlighter (see below).
+* are already using Tweego.
 
 However, you:
-* ''have to use'' the Twee Notation (see below) and set up [[some mandatory information|TODO:]]
-* will need a separate compiler to transform the code into a playable HTML file (import in Twine or use Tweego)
-* will need an IDE to edit code (//VSCode is often recommended//)
-** syntax highlighting is dependent on your IDE and extensions (//Twee 3 Language Tool// for VSCode)
+* ''have to use'' the Twee Notation (see below) and set up [[some mandatory information|Startup]].
+* will need a separate compiler to transform the code into a playable HTML file (import in Twine or use Tweego).
+* will need an IDE to edit code (//VSCode is often recommended//).
+** syntax highlighting is dependent on your IDE and extensions (//Twee 3 Language Tool// for VSCode).
 
-> ''Note:'' Twee files can be imported into Twine, if [[set up properly|TODO:]]. But all your passages must be inside ''one'' {{{.tw}}} file, since Twine can't load multiple {{{.tw}}} for one project. You can otherwise choose to use [[Tweego|TODO:]] to compile for you.
-
+> ''Note:'' Twee files can be imported into Twine, if [[set up properly|Startup]] ({{{Library > Import}}}). But all your passages must be inside ''one'' {{{.tw}}} file, since Twine can't load multiple {{{.tw}}} for one project. You can otherwise choose to use [[Tweego|https://manonamora.itch.io/ready-to-use-tweego-folder]] to compile for you.
+\
 <h4>The Twee Notation</h4>\
-This notation refers to how passages are defined on the page, to alert Twine or compilers that a new passage will start from this line code onward. In Twee files, they will be coded one under the other, with a ''sigil'' to differentiate it from the rest of the code.
+This notation refers to how passages are defined on the page, to alert Twine or compilers that a new passage will start from this line code onward. In Twee files, they will be coded one under the other, with a ''sigil'' ({{{::}}}) to differentiate it from the rest of the code.
 {{{
     :: PassageName [tags] {metadata}
     Lorem Ipsum...
@@ -79,7 +115,7 @@ So, to create a valid passage, you will need to input on a new ''empty'' line ''
 * {{{PassageName}}}: the name of the passage 
 ** every passage ''MUST BE UNIQUE'', or you will run into errors during import/compiling
 ** special characters (excl. {{{A → Z}}}, {{{0 → 9}}}, {{{_}}} or {{{-}}}) are accepted, but not recommended 
-* {{{[tags]}}} (optional): any needed [[tags|TagsTODO:]], inside brackets {{{ [] }}}
+* {{{[tags]}}} (optional): any needed [[tags|Tags]], inside brackets {{{ [] }}}
 * {{{ {metadata} }}} (optional): extra data about the passage, separated by a comma {{{ , }}}, used display the passage on a Twine map:
 ** {{{"position": "x, y"}}} (optional): the position of the passage
 *** if not indicated, the passages will be displayed one next to another in lines of 10
@@ -94,3 +130,30 @@ So, to create a valid passage, you will need to input on a new ''empty'' line ''
 }}}
 \
 You will need to repeat this process as many times as your project requires - a.k.a. every time you need a new passage.
+
+:: JS-CSS
+<h1>JavaScript and the StyleSheet</h1>
+To customise your project even further, Twine gives you the possibility to use JavaScript and CSS, which you can edit in:
+* Twine app: the //JavaScript// and //StyleSheet// passages (in //Story// menu).
+* Twee files: the {{{[script]}}} and {{{[stylesheet]}}}-[[tagged|Tags]] passages
+* Tweego: the {{{.js}}} and {{{.css}}} files
+\
+<h3>JS - JavaScript</h3>\
+''JavaScript'' (or JS) is a coding language used in HTML files that will dictate the behaviour of elements on the page. When you click on a link to change the passage to a new one, it is because the JavaScript code is telling the page to do so. The macros in SugarCube are built on JavaScript.
+
+The most common use for JavaScript in a project is:
+* to add custom macro for effect not available in the base SugarCube
+* to add [[Settings]] to change how the project looks/acts for the player 
+* to change how the page looks/behaves (ex: removing the history arrows)
+\
+> ''IMPORTANT'': Java and JavaScript are ''two different coding languages'', with no link between each other aside from the four characters in their name!
+\
+<h3>CSS - Cascading Style Sheet</h3>\
+''Cascading Style Sheet'' (or CSS) is a coding language used in HTML files to dictate the layout and formatting of the page. From the choice of background to the placement of an element, this is usually done in with CSS. The language allows for alternate rules for different settings or screen size, as well as animation.
+> ''Note:'' you can use JavaScript/jQuery to change aspects of the page (add/remove an element, change the colour). But, in most cases, CSS will suffice.
+\
+The most common use for CSS in a project is:
+* to change the basic formatting of a page (ex: colour scheme)
+* to have alternate rules for coded [[Settings]] in the JavaScript (ex: font family)
+* to have a different formatting of the page on mobile screens
+> ''Note:'' in SugarCube, you can edit some styling with the [[Markup formatting|Formatting]].

@@ -219,13 +219,13 @@ Unlike ChoiceScript, Twine does not come with a Built-In system for Achievements
 Creating achievements can be done in two major ways: through a variable or by relying on metadata (cache). There isn't much difference between the two methods, aside from how they are save: the Variable way will work closer to ChoiceScript's Achievements (applied to one playthrough), while the Metadata will apply to all playthroughs on a device (until the cache is deleted).
 > ''Note:'' for saves reason, the first method is more recommended.
 
-You will need to know which passages will trigger each of the achievements, as well as a separate passage where you will display those achievements (let's call it: {{{Achievements}}}). The actual display of the achievements will be done with [[conditional statements|TODO:]] for regular variables, and JavaScript functions for the MetaData.
+You will need to know which passages will trigger each of the achievements, as well as a separate passage where you will display those achievements (let's call it: {{{Achievements}}}). The actual display of the achievements will be done with [[conditional statements|IfElse]] for regular variables, and JavaScript functions for the MetaData.
 \
 <h2>Simple Variable Achievements</h2>\
-This is the most basic way of creating achievements, as it relies on simple variables to track whether an achievement has been earned or not. You can use either [[types of variables|TODO:]] for this: a regular variable for each achievement, or an object/array to group achievements inside one variable. 
+This is the most basic way of creating achievements, as it relies on simple variables to track whether an achievement has been earned or not. You can use either [[types of variables|Variables]] for this: a regular variable for each achievement, or an object/array to group achievements inside one variable. 
 \
 <h3>Creating Achievements</h3>\
-These variables should be [[defined|TODO:]] in {{{StoryInit}}}.
+These variables should be [[defined|Variables]] in {{{StoryInit}}}.
 {{{
     :: StoryInit
     <<set $achievement1 to false>>
@@ -375,3 +375,142 @@ SugarCube does not come with its own notification element, like ChoiceScript doe
 > //Custom Macro//:
 In this case, how to set up the notification will depend on the specific custom macro you choose. Chapel's [[notify macro|https://github.com/ChapelR/custom-macros-for-sugarcube-2/blob/master/docs/notify-macro.md]] and Sjoerd [[Flash macro|https://github.com/SjoerdHekking/custom-macros-sugarcube2/tree/main/Notification]] are the most well known/established custom macro to create notifications.
 ''Note:'' Sjoerd's macro is more ARIA-accessible for screen readers than Chapel's.
+
+:: SpeP
+<h1>Customising with Special Passages</h1>
+Along with [[Special Tags]], you can customise your project further by using some of the ''Special Passage''. By naming a passage with one of the following Special Names, you will enable a special functionality or placement for the content of that passage. This list is non-exhaustive.
+> ''Note:'' these names are //case-sensitive//, so you //must// capitalise where indicated.
+\
+* {{{StoryInit}}}: runs during initialisation, most useful for [[setting variables|Variables]] and [[cache audio tracks|Miscellaneous]]
+* {{{PassageHeader}}} and {{{PassageFooter}}}: lets you add a Header and a Footer to the passage, respectively rendered before and after the passage 
+* SideBar specific Special Passages, ordered in the way they appear (top → bottom):
+** {{{StoryBanner}}}: to display a logo (or other code)
+** {{{StoryDisplayTitle}}}: to display a title (if different from {{{StoryTitle}}})
+** {{{StorySubtitle}}}: to display a tagline under the title (or other code)
+** {{{StoryAuthor}}}: to display the author's name (or other code)
+** {{{StoryCaption}}}: to add extra text or code
+** {{{StoryMenu}}}: to add extra links (only {{{<a>}}}/{{{<<link>>}}}/{{{[[link]]}}} elements)
+* {{{StoryInterface}}}: to create a new interface (HTML/JavaScript only)
+** the content of the passage will appear inside {{{<div id="story">}}}
+** must include at least {{{<div id="passages">}}} to work
+
+:: Tags
+<h1>Customising with Tags</h1>
+Along with [[Special Passages|SpeP]], you can use tags to create specific functionalities for passages or to customise them.
+
+In Twine, you can create a tag by clicking on the //+ Tag// button when a passage is opened. In Twee, tags should be located inside straight brackets {{{ [] }}}, and can contain any characters (though you may want to stick to {{{a → z}}}, {{{0 → 9}}}, and {{{-}}}). You can add as many tags as you want for a single passage, separating them with a space:
+{{{
+    :: Passage [tag-1 tag2 etc]
+}}}
+> ''Note:'' the following tags //are case-sensitive//!
+\
+<h2>Special Twee Tags</h2>\
+You can include JavaScript and CSS as separate passages in your Twee files by adding these two tags: {{{script}}} and {{{stylesheet}}}. These tags will flag Twine when importing or Tweego when compiling that the passages are containing respectively JavaScript or CSS code, and must be processed accordingly.
+> ''Note:'' you can have multiple tagged passages - Twine will merge those passages into their respective section (JavaScript or StyleSheet) in the order it finds them.
+\
+<h3>{{{script}}}</h3>\
+The {{{script}}} tag will flag that the passage's contents are coded in JavaScript.
+{{{
+    :: Doing-JavaScript-Crime [script]
+}}}
+> ''Note:'' if you are using Tweego, you may want to use a separate {{{.js}}} file for your JavaScript instead.
+\
+<h3>{{{stylesheet}}}</h3>\
+The {{{stylesheet}}} tag will flag that the passage's contents are coded in CSS.
+{{{
+    :: Unacceptable-CSS-Mess [stylesheet]
+}}}
+> ''Note:'' if you are using Tweego, you may want to use a separate {{{.css}}} file for your StyleSheet instead.
+\
+<h2>SugarCube Special Tags</h2>\
+SugarCube includes 3 general special tags:
+* {{{init}}}: a code-only passage that runs once at the start of the game
+** this is particularly useful for add-ons/library. For variables, the {{{StoryInit}}} [[Special Passage|SpeP]] should be used 
+* {{{nobr}}}: will remove any line break in the coded passage.
+** mainly useful for {{{<<widget>>}}}
+* {{{widget}}}: lets you defined {{{<<widget>>}}} ("custom macros"), loaded at the start of the game
+\
+<h2>Custom Tags</h2>\
+You can also turn any tag you add to a passage into a "special" tag. This is because a tag can be used in the StyleSheet, by creating specific styling rules to apply to a passage. The tag will be both attached to the passage, and be added to a specific element (or multiple) as an attribute ({{{data-tag="TAG"}}}), which is format dependent. For example, in the StyleSheet:
+{{{
+    html[data-tags="TAG"] {
+        /* CSS rules */
+    }
+
+    [data-tags="TAG"] body {
+        /* CSS rules */
+    }
+
+    [data-tags="TAG"] #passages {
+        /* CSS rules */
+    }
+
+    [data-tags="TAG"] a {
+        /* CSS rules */
+    }
+}}} 
+
+:: Settings
+<h1>Accessibility Settings</h1>
+While you can change the game's theme or font size by default in ChoiceScript, you will need to set those manually in SugarCube. In your JavaScript [[sections|JS-CSS]], add the wanted Setting APIs in the order you want them to appear on the screen. Some settings may require additional code in the StyleSheet
+> ''Note:'' these are only examples, not the exhaustive list of Settings you can include in your project. You can check my [[Settings Template|https://manonamora.itch.io/twine-sugarcube-templates]] for more options.
+\
+> //Change the Theme//:
+{{{
+ → In your JavaScript: 
+    var settingThemeNames = ["Base", "Reverse", "Night", "Light"];
+    var settingThemeHandler = function () {
+        var $html = $("html");
+        // remove any existing theme class
+            $html.removeClass("theme-reverse theme-night theme-light");
+        // switch on the theme name to add the requested theme class
+            switch (settings.theme) {
+                case "Reverse":
+                    $html.addClass("theme-reverse");
+                    break;
+                case "Night":
+                    $html.addClass("theme-night");
+                    break;
+                case "Light":
+                    $html.addClass("theme-light");
+                    break;
+            }
+    };
+    Setting.addList("theme", {
+        label    : "Choose a theme.",
+        desc     : "This will change the colour palette",
+        list     : settingThemeNames,
+        default  : "Base",
+        onInit   : settingThemeHandler,
+        onChange : settingThemeHandler
+    });
+
+ → In your StyleSheet: 
+    body {color: black;}
+    html.theme-reverse body {color: white;}
+    html.theme-night body {color: lightgrey;}
+    html.theme-light body {color: darkgrey;}
+}}}
+> //Change the Font Size//:
+{{{
+    Setting.addRange("fontSize", {
+	label       : "Change the Font Size",
+	min         : 14,
+	max         : 50,
+	step        : 4,
+    onInit      : function () {$("#passages").css("font-size", settings.fontSize + "px")}
+	onChange    : function () {$("#passages").css("font-size", settings.fontSize + "px")}
+});
+}}}
+> //Toggle Animations//:
+{{{
+    Setting.addToggle("animations", {
+	    label : "Display animated content?" 
+    });
+ → the default value not defined, so false is used
+
+    :: Story Passage
+    <<if settings.animations is true>> 
+        /* your code/text  */
+    <</if>>
+}}}
