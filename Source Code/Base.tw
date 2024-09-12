@@ -1,62 +1,377 @@
 :: StoryTitle
-CScript to SG/Twee Guide
+ChoiceScript to SugarCube Guide
 
 :: StoryData
 {
 	"ifid": "C15CE33F-61F6-4909-BB59-73EE7A3D57B1", 
 	"format": "SugarCube",
-	"format-version": "2.36.1",
-	"start": "Start"}
+	"format-version": "2.37.3",
+	"start": "Start"
+}
+
+:: StoryInit
+    <<set $intelligence to 50>>
+    <<set $charismatic to 30>>
+    <<set $life to 100>>
 
 :: Start
-	<center><h1>Welcome to this ChoiceScript To SugarCube Guide & More!</h1></center>
-	In this folder and file, you will find all that you need to help you convert your ChoiceScript game to a compiled Twine (SugarCube) file, without having to get frustrated with the Twine App.
+<h1>ChoiceScript to SugarCube Guide</h1>
+This Guide was created to help ChoiceScript creators (and their projects) transition to SugarCube, a format of Twine. It is meant to display the differences and similarities between both coding formats, to make it easier going from one to the other.
 
-	The ChoiceScript to SugarCube Guide covers most CScript functions and their equivalent in Twine (or the alternative when available). The Code shown is based on the Twee Notation, the formatting style used to compile your project outside of Twine. 
-	
-	As is, the compiled file will only use the base SugarCube UI and script. The guide for Tweego in this file is based on the use of this folder with VSCode.
+The content of this Guide was based on the [[ChoiceScript Wiki|https://choicescriptdev.fandom.com/wiki/]], translating that logic into SugarCube's. This Guide will also quickly goes over the differences in using Twine or Tweego when creating a project (all examples formatted the [[Twee Notation|TwineOrTwee]]). However, this guide does not cover how to use Twine (check [[this guide|https://twinery.org/reference/en/]]), all the macros and functionalities of SugarCube (check out [[this guide|https://manonamora.itch.io/twine-sugarcube-guide]] instead) or how to compile with Tweego (check out [[this other guide|https://manonamora.itch.io/ready-to-use-tweego-folder]] instead).
+<hr>
+<center>''Table of Content:''</center>
+* [[About Twine and SugarCube|About]]
+* [[Understanding the Differences in Structures|Structures]]
+** [[Coding in Twine or in Twee?|TwineOrTwee]]
+** [[JavaScript and the StyleSheet|JS-CSS]]
+* [[Commands vs Macros/Markup|Commands]]
+** [[Variables: Types, Defining, Modifying and Deleting|Variables]]
+*** [[Displaying the Values of Variables|Print]]
+** [[Having Choices and Linking Passages|Choices]]
+** [[Displaying Variation and Conditional Statements|IfElse]]
+** [[*goto for Calling Scenes and Endings|GoTo]]
+** [[Add Player Input and Interactivity|Input]]
+** [[Formatting Text and Images|Formatting]]
+** [[Other Command Equivalents|Miscellaneous]]
+* [[Starting your Project|Startup]]
+** [[Letting the Player Save|Saves]]
+** [[Creating a Stats Page|Stats]]
+** [[Notes on Achievements|Achievements]]
+** [[Customising with Special Passages|SpeP]]
+** [[Customising with Tags|Tags]]
+** [[Accessibility Settings|Settings]]
+* [[SugarCube Guides, Resources and Templates|Templates]]
+* [[Quick Equivalence Index|Index]]
+* [[Visual of Macros and Markups|Styling]]
 
-	''This Folder includes:''
-	<ul>
-		<li>A Ready-to-Code SugarCube/Twee Project:
-			<ul><li>The Minimal Base needed.</li>
-			<li>A JavaScript file for script code (currently empty).</li>
-			<li>A CSS file for stylesheets (currently empty).</li>
-			<li>A file with extra Special Passages, basic HTML styling, and base macros.</li>
-			<li>A Tweego Explanation File.</li>
-			<li>''A ChoiceScript to SugarCube Guide.''</li></ul></li>
-		<li>A compiled example HTML file and its debug version.</li>
-		<li>Relevant Tweego Files (v2.1.1-Twee 3) for a SugarCube project.</li>
-		<li>An Easy-to-Use Compiler with a cheatsheet.</li>
-	</ul> 
-	<hr>
-	''Main Menu:''
-	<<link "ChoiceScript to SugarCube/Twee Transition" "CScript">><</link>>
-	<<link "Tweego Recommended Programs" "RecProg">><</link>>
-	<<link "Using Tweego/Twee" "Tweego">><</link>>
-	<hr>
-	<center><small>Thanks to SjoerdHekking for setting me with Tweego and Arlo, Oddie and Vahnya for proofreading my CScript guide.</small></center>
+:: About
+<h1>About Twine and SugarCube</h1>
+//''Twine''// is a free and open-source tool to create interactive, non-linear stories, created by Chris Klimas in 2009. It is now maintained by multiple individuals, in [[several repositories|https://github.com/tweecode]]. ''//Twine//'' is also a registered trademark of the [[Interactive Fiction Technology Foundation|https://iftechfoundation.org/]].
+
+''//Twine//'' offers both a desktop and browser application on [[its website|https://twinery.org]], giving creators a visual representation of each passage in their game. The browser version can also be opened on tablets and mobile devices.
+
+Over the years, Twine has had [[multiple story formats|http://mcdemarco.net/tools/hyperfic/twine/catalog/]], SugarCube being among them. Twine compiles the code of the chosen format to create a file in HTML or Twee. The other base formats of Twine 2 are: Harlowe, Chapbook, and Snowman.
+> ''Note:'' Harlowe is the default format in Twine. You can change the format of a project in the {{{Story > Details}}} menu.
+
+''//SugarCube//'' is a free (gratis and libre) coding format for Twine/Twee created and maintained by Thomas M. Edwards. It is based on JavaScript and jQuery, and can be styled with HTML and CSS.
+
+Thomas M. Edwards is also the creator of //''Tweego''//, a free (gratis and libre) command line compiler for Twine/Twee story formats written in Go. It is an alternative to Twine, and can be used with any Integrated development environment (IDE), like VSCode. <small>This guide was compiled with Tweego.</small>
+
+If you want to support the parties named above, you can find here the links for:
+* Chris Klimas (klembot) : [[Patreon|https://www.patreon.com/klembot]]
+* Thomas M. Edwards (TME - TheMadExile) : [[Patreon|https://www.patreon.com/thomasmedwards]] - [[Ko-Fi|https://ko-fi.com/thomasmedwards]]
+* The Interactive Fiction Technology Foundation : [[Donations|https://iftechfoundation.org/give/]]
+> ''Note:'' to support other parties creating assets and resources for Twine, check this [[list|https://manonamora-if.tumblr.com/post/700577877042888704/]] (non-exhaustive).
+
+:: Widget [widget nobr]
+<<widget "SimpleStat">>
+	<div class="statBarContainer">
+        <div class="statBar" @style="'width:' + $intelligence + '%;'"></div>
+    </div>
+<</widget>>
+<<widget "DoubleStat">>
+	<div class="statBarContainer">
+        <div class="statBar" @style="'width:' + $intelligence + '%;'">Destiny: $intelligence%</div>
+        <div class="statDouble">Failure: <<print 100-$intelligence>>%</div>
+    </div>
+<</widget>>
+
+:: Templates
+<h1>SugarCube Guides, Resources and Templates</h1>
+If you want to go further with SugarCube, or require specific assets to further customise your project, you will find below the official and non-official documentation, guides, and resources for Twine, Tweego, and SugarCube.
+> ''Note:'' all the resources below can be found in the [[Twine Resource Masterlist|https://intfiction.org/t/twine-resource-masterlist-wiki/65903]].
+\
+<h2>Official Documentation and Communities</h2>\
+* the [[Twine Reference|https://twinery.org/reference/en/]]: guide on how to use the Twine App
+* the [[Twinery Cookbook|http://twinery.org/cookbook/]]: example of codes for all formats, incl. SugarCube
+** some may be deprecated, since formats have updated
+* the [[SugarCube documentation|http://www.motoslave.net/sugarcube/2/docs/]]
+* the [[Tweego documentation|https://www.motoslave.net/tweego/docs/]]
+* the [[Interactive Fiction Forum|https://intfiction.org/c/authoring/twine/]]
+** formerly: [[Twinery Forum|https://twinery.org/forum/discussions]] and [[Twine Q&A|https://twinery.org/questions/]]
+** for all three, the format and version should be indicated in the posts
+* the [[Twine Discord|https://discordapp.com/invite/n5dJvPp]]
+\
+<h2>Useful Guides</h2>\
+* my [[SugarCube 2 Guide|https://manonamora.itch.io/twine-sugarcube-guide]] and [[Tweego Guide|https://manonamora.itch.io/ready-to-use-tweego-folder]]
+* Grim Baccaris' [[Grimoires|https://itch.io/c/1752887/grimoire-resources]] (general Twine)
+* Yi Weng's [[Youtube Guide||https://www.youtube.com/watch?v=5QyXZ7XRasA&list=PL5YOcupubqyTLWQnIqfHdoeBLFxbWcbWX]] for moving from ChoiceScript to SugarCube
+\
+<h2>Templates and Macros</h2>\
+* Brushmen's [[Template Emulating the CS UI|https://brushmen.itch.io/cs-like-sugarcube-template]], including the Stats Page and Fairmath widgets.
+* [[Chapel's Macros|https://twinelab.net/custom-macros-for-sugarcube-2/demo/]], includes Pronouns Settings and Stats Bar creation, Fairmath calculations.
+* [[HiEv's Macro|https://hiev-heavy-ind.com/Sample_Code/Sample_Code.html#Main%20Menu]], includes Pronouns Settings and Stats Bar creation
+* my [[SugarCube templates|https://manonamora.itch.io/twine-sugarcube-templates]] (Interface, Settings, and Code)
+* and whole lot of Custom Macros, Templates for Interface and Code, in the [[Twine Resource Masterlist|https://intfiction.org/t/twine-resource-masterlist-wiki/65903]].
+\
+<h2>Learn more about JavaScript and CSS</h2>\
+* the [[W3 School|https://www.w3schools.com/]] has the most beginner explanations, and lets you test and edit their examples.
+* [[MDN Web Docs|https://developer.mozilla.org/en-US/]] is more technical but provides a more extensive documentation.
+
+:: Index 
+<h1>Quick Equivalence Index</h1>
+The index below will provide the closest equivalence of each ChoiceScript command in SugarCube (as best as possible) and the corresponding page.
+> ''TLDR of the Guide:'' there's no 1-to-1 equivalence between the formats, only close approximation.
+<<nobr>><table>
+    <tr>
+        <th>ChoiceScript</th>
+        <th>SugarCube</th>
+        <th>Guide</th>
+    </tr>
+    <tr>
+        <td>{{{*achieve}}}</td>
+        <td>N/A</td>
+        <td>[[Notes on Achievements|Achievements]]</td>
+    </tr>
+    <tr>
+        <td>{{{*achievement}}}</td>
+        <td>N/A</td>
+        <td>[[Notes on Achievements|Achievements]]</td>
+    </tr>
+    <tr>
+        <td>{{{*allow_reuse}}}</td>
+        <td>N/A</td>
+        <td>[[Having Choices and Linking Passages|Choices]]</td>
+    </tr>
+    <tr>
+        <td>{{{*author}}}</td>
+        <td>{{{:: StoryAuthor}}}</td>
+        <td>[[Customising with Special Passages|SpeP]]</td>
+    </tr>
+    <tr>
+        <td>{{{*bug}}}</td>
+        <td>Debug Mode</td>
+        <td>[[Other Command Equivalents|Miscellaneous]]</td>
+    </tr>
+    <tr>
+        <td>{{{*check_achievements}}}</td>
+        <td>N/A</td>
+        <td>[[Notes on Achievements|Achievements]]</td>
+    </tr>
+    <tr>
+        <td>{{{*choice}}}</td>
+        <td>{{{<<link>>}}}/{{{[[link]]}}}</td>
+        <td>[[Having Choices and Linking Passages|Choices]]</td>
+    </tr>
+    <tr>
+        <td>{{{*comment}}}</td>
+        <td>{{{/* comment */}}}</td>
+        <td>[[Formatting Text and Images|Formatting]]</td>
+    </tr>
+    <tr>
+        <td>{{{*create}}}</td>
+        <td>{{{<<set>>}}}</td>
+        <td>[[Variables: Types, Defining, Modifying and Deleting|Variables]]</td>
+    </tr>
+    <tr>
+        <td>{{{*delete}}}</td>
+        <td>{{{<<unset>>}}}</td>
+        <td>[[Variables: Types, Defining, Modifying and Deleting|Variables]]</td>
+    </tr>
+    <tr>
+        <td>{{{*disable_reuse}}}</td>
+        <td>{{{<<if>>}}}</td>
+        <td>[[Having Choices and Linking Passages|Choices]]</td>
+    </tr>
+    <tr>
+        <td>{{{*else}}}</td>
+        <td>{{{<<else>>}}}</td>
+        <td>[[Displaying Variation and Conditional Statements|IfElse]]</td>
+    </tr>
+    <tr>
+        <td>{{{*elseif}}}</td>
+        <td>{{{<<elseif>>}}}</td>
+        <td>[[Displaying Variation and Conditional Statements|IfElse]]</td>
+    </tr>
+    <tr>
+        <td>{{{*ending}}}</td>
+        <td>N/A</td>
+        <td>[[*goto for Calling Scenes and Endings|GoTo]]</td>
+    </tr>
+    <tr>
+        <td>{{{*fake_choice}}}</td>
+        <td>{{{<<link>>}}}/{{{[[link]]}}}</td>
+        <td>[[Having Choices and Linking Passages|Choices]]</td>
+    </tr>
+    <tr>
+        <td>{{{*finish}}}</td>
+        <td>N/A</td>
+        <td>[[*goto for Calling Scenes and Endings|GoTo]]</td>
+    </tr>
+    <tr>
+        <td>{{{*gosub}}}</td>
+        <td>{{{<<include>>}}}/{{{<<widget>>}}}</td>
+        <td>[[*goto for Calling Scenes and Endings|GoTo]]</td>
+    </tr>
+    <tr>
+        <td>{{{*gosub_scene}}}</td>
+        <td>{{{<<include>>}}}/{{{<<widget>>}}}</td>
+        <td>[[*goto for Calling Scenes and Endings|GoTo]]</td>
+    </tr>
+    <tr>
+        <td>{{{*goto}}}</td>
+        <td>{{{<<include>>}}}/{{{<<widget>>}}}</td>
+        <td>[[*goto for Calling Scenes and Endings|GoTo]]</td>
+    </tr>
+    <tr>
+        <td>{{{*goto_scene}}}</td>
+        <td>{{{<<include>>}}}/{{{<<widget>>}}}</td>
+        <td>[[*goto for Calling Scenes and Endings|GoTo]]</td>
+    </tr>
+    <tr>
+        <td>{{{*goto_random_scene}}}</td>
+        <td>{{{<<include $var>>}}} (where {{{$var}}} has a random passage name)</td>
+        <td>[[Other Command Equivalents|Miscellaneous]]</td>
+    </tr>
+    <tr>
+        <td>{{{*hide_reuse}}}</td>
+        <td>{{{<<if>>}}}</td>
+        <td>[[Having Choices and Linking Passages|Choices]]</td>
+    </tr>
+    <tr>
+        <td>{{{*if}}}</td>
+        <td>{{{<<if>>}}}</td>
+        <td>[[Displaying Variation and Conditional Statements|IfElse]]</td>
+    </tr>
+    <tr>
+        <td>{{{*image}}}</td>
+        <td>{{{[img[URL]]}}}</td>
+        <td>[[Formatting Text and Images|Formatting]]</td>
+    </tr>
+    <tr>
+        <td>{{{*input_number}}}</td>
+        <td>{{{<<numberbox>>}}}</td>
+        <td>[[Add Player Input and Interactivity|Input]]</td>
+    </tr>
+    <tr>
+        <td>{{{*input_text}}}</td>
+        <td>{{{<<textbox>>}}}</td>
+        <td>[[Add Player Input and Interactivity|Input]]</td>
+    </tr>
+    <tr>
+        <td>{{{*label}}}</td>
+        <td>{{{:: PassageName}}}</td>
+        <td>[[Understanding the Differences in Structures|Structures]]</td>
+    </tr>
+    <tr>
+        <td>{{{*line_break}}}</td>
+        <td>N/A</td>
+        <td>Just go to a new line.</td>
+    </tr>
+    <tr>
+        <td>{{{*link}}}</td>
+        <td>{{{[[link]]}}}/{{{<a>}}}</td>
+        <td>[[Formatting Text and Images|Formatting]]</td>
+    </tr>
+    <tr>
+        <td>{{{*page_break}}}</td>
+        <td>{{{<<link>>}}}/{{{[[link]]}}}</td>
+        <td>[[Having Choices and Linking Passages|Choices]]</td>
+    </tr>
+    <tr>
+        <td>{{{*params}}}</td>
+        <td>Through variables set in the choice</td>
+        <td>[[Other Command Equivalents|Miscellaneous]]</td>
+    </tr>
+    <tr>
+        <td>{{{*print}}}</td>
+        <td>{{{<<print>>}}}/{{{<<=>>}}}/Nothing</td>
+        <td>[[Displaying the Values of Variables|Print]]</td>
+    </tr>
+    <tr>
+        <td>{{{*rand}}}</td>
+        <td>{{{random()}}}</td>
+        <td>[[Variables: Types, Defining, Modifying and Deleting|Variables]]</td>
+    </tr>
+    <tr>
+        <td>{{{*gotoref}}}</td>
+        <td>{{{<<include $var>>}}} (where {{{$var}}} is a passage name)</td>
+        <td>[[Other Command Equivalents|Miscellaneous]]</td>
+    </tr>
+    <tr>
+        <td>{{{*setref}}}</td>
+        <td>{{{<<set>>}}}</td>
+        <td>[[Variables: Types, Defining, Modifying and Deleting|Variables]]</td>
+    </tr>
+    <tr>
+        <td>{{{*scene_list}}}</td>
+        <td>N/A</td>
+        <td>[[Understanding the Differences in Structures|Structures]]</td>
+    </tr>
+    <tr>
+        <td>{{{*script}}}</td>
+        <td>JavaScript Passage/{{{<<script>>}}}/{{{<<run>>}}}</td>
+        <td>[[Other Command Equivalents|Miscellaneous]]</td>
+    </tr>
+    <tr>
+        <td>{{{*selectable_if}}}</td>
+        <td>{{{<<if>>}}}</td>
+        <td>[[Having Choices and Linking Passages|Choices]]</td>
+    </tr>
+    <tr>
+        <td>{{{*set}}}</td>
+        <td>{{{<<set>>}}}</td>
+        <td>[[Variables: Types, Defining, Modifying and Deleting|Variables]]</td>
+    </tr>
+    <tr>
+        <td>{{{*share_this_game}}}</td>
+        <td>N/A</td>
+        <td>[[*goto for Calling Scenes and Endings|GoTo]]</td>
+    </tr>
+    <tr>
+        <td>{{{*sound}}}</td>
+        <td>{{{<<cacheaudio>>}}}/{{{<<audio>>}}}</td>
+        <td>[[Other Command Equivalents|Miscellaneous]]</td>
+    </tr>
+    <tr>
+        <td>{{{*stat_chart}}}</td>
+        <td>N/A</td>
+        <td>[[Creating a Stats Page|Stats]]</td>
+    </tr>
+    <tr>
+        <td>{{{*temp}}}</td>
+        <td>{{{<<set>>}}}</td>
+        <td>[[Variables: Types, Defining, Modifying and Deleting|Variables]]</td>
+    </tr>
+    <tr>
+        <td>{{{*title}}}</td>
+        <td>At Start/{{{:: StoryTitle}}}</td>
+        <td>[[Starting your Project|Startup]]</td>
+    </tr>
+</table><</nobr>>
 
 :: Credits
-Guide created by manonamora ([[Tumblr|https://manonamora-if.tumblr.com/]]/[[Itch|https://manonamora.itch.io/]]) on Twine (v2.7.0)/Tweego with Sugarcube (v2.36.1).
-<hr>
-CScript:
-* [[ChoiceScript Wiki|https://choicescriptdev.fandom.com/wiki/Structure_of_a_ChoiceScript_game]]
-Tweego:
-* [[Documentation and Download|http://www.motoslave.net/tweego/]]
-* [[Story Formats|https://twinery.org]]
-* [[SjoerdHekking|https://github.com/SjoerdHekking]]
-<hr>
-Assets from:
-* [[Wikipedia|https://en.wikipedia.org/wiki/Main_Page]]
-<hr>
-Other:
-* [[Twinery.org|https://twinery.org/]]
-* [[SugarCube 2 Documentation|https://www.motoslave.net/sugarcube/2/docs/]]
-* [[SugarCube 2 Guide|https://manonamora.itch.io/twine-sugarcube-guide]]
-* [[Twine Resources List|https://www.tumblr.com/manonamora-if/700577877042888704/interactive-fiction-twine-resource-megalist]]
-* [[Intfiction.org Forum|https://intfiction.org/c/authoring/twine]]
-* [[Reddit r/twinegames|https://www.reddit.com/r/twinegames/]]
-* [[Twine Discord|https://discordapp.com/invite/n5dJvPp]]
-* [[W3 School|https://www.w3schools.com/]]
-<h5>You can find my other templates [[here|https://manonamora.itch.io/twine-sugarcube-templates]].</h5>
+This guide was constructed by ''manonamora''.
+It is based on the SugarCube official documentation, created by Thomas M. Edwards, the developer of the SugarCube format, and the [[ChoiceScript Wiki|https://choicescriptdev.fandom.com/wiki/]].
+
+<h3>manonamora</h3>\
+You can find:
+* my other templates on [[Itch|https://manonamora.itch.io/]], as well as my guides:
+** [[SugarCube Guide|https://manonamora.itch.io/twine-sugarcube-guide]]
+** [[Ready-to-Use Tweego and Guide|https://manonamora.itch.io/ready-to-use-tweego-folder]]
+* my games and IF experiments on [[Itch|https://manonamora.itch.io/]]
+* me, and ask me questions, over on [[Tumblr|https://manonamora-if.tumblr.com]] or [[my website|https://manonamora.neocities.org/]]
+* my Twine Resource Masterlist on the [[IntFiction Forum|https://intfiction.org/t/twine-resource-masterlist-wiki/65903]] (a not updated version is rebloggable on [[Tumbr|https://manonamora-if.tumblr.com/post/700577877042888704/]]).
+\
+<h3>Twine and SugarCube</h3>\
+[[About Twine and SugarCube|About]]
+You can download Twine over on the [[Twinery.org|https://twinery.org/]] website, which includes the SugarCube format.
+Thomas M. Edwards hosts the Documentation for the SugarCube format over on [[his website|https://www.motoslave.net/sugarcube/2/docs/]].
+
+You can also find resources and help with Twine and SugarCube:
+* on the [[IntFiction Forum|https://intfiction.org/c/authoring/twine/46]]
+* on the [[Twine Subreddit|https://www.reddit.com/r/twinegames/]]
+* in the [[Twine Discord|https://discord.gg/n5dJvPp]]
+* and more listed in this [[Masterlist|https://intfiction.org/t/twine-resource-masterlist-wiki/65903]]
+\
+<h3>A Special Thanks to...</h3>\
+* ''Chris Klimas'' for creating Twine, and ''TheMadExile/TME'' for making the SugarCube format and the Tweego compiler.
+* ''Cycy'' for making the Twee 3 Language Tool extension for VScode.
+* ''Brushmen'' for his [[Template|https://brushmen.itch.io/cs-like-sugarcube-template]]
+* The Twine Discord!
+* and Arlo, who read through the first version of this guide!
+
+:: TheCube [Twine.image] {"position":"2475,350","size":"100,100"}
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEsAAABLCAYAAAA4TnrqAAAAB3RJTUUH5AMQDQ4vazJd/wAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAAN1wAADdcBQiibeAAAAzdJREFUeNrt3M1rGkEUAHDb/jO9tce20B5bUKOiLpqIH/9Gbh4CvQQCnsV6r7d4rh9gY8EYjYk5qQcPBmM8iB6E7E7nyS5Yu36s7uzne/BYFnZ25v2cdZaFXYfDgHF0dPTWgbE5XC7XN6/XW6VYxOPxXNHtV1SRQfL5fH8A6fj4WEilUiQcDguwL+LZHu0VnT0cxbgHlFgsxufzeTKbzch8Pl9sYT8ajfIi2j0cD+0QSURaTQkNjrMT2gKJXm7tXZBsiZZMJl+73e7Yvkjb0OC8pkdTG2kXNOgP+kUkK6FpjWRKNI7j3iwjxeNxTZFMgSYh0VXpwQhI69BgXMtoMG7dkBKJhKGQtqHBuJmjycwkwchI69Dgx2WGZnakDTNNUA3NakjM0GjDTzTrcJJIJCLkcjkymUwsgbSaUBfUd3JyIqHVoX4lD9++Q8N0Ov1oVSQ5tGw2+wh1Q/2KsarVKmk0GrdPT091K0PRS7L+/Px8OxgMyEFYtVptkVZEk5BGoxGBVA1rBe3GSkjMsMyMRpFu5JCYY5kJbRuSZlhGRtsVSXMsI6EpRdINaxltOBw2zICkO5aUzWbzmhZwxxJpOp02DkEyDBZLNDqT7sbj8fWhSIbDUhNNbSTDYh2CxgrJ8FhK0FgjmQZrE5pWSKbDEpNvtVq/KVCVwl3RAnitoMyItch2u13UEgmxEAuxEAuxEAuxEAuxEAuxEAuxEAuxEAuxEAuxEAuxEAuxEMsaWOVy2VZYvV5POZbH4zmFRhzHvVxcXJBKpWJprH6/TzKZDAmFQi/iZxJOFb044Ha7P9KGl9DY7/fzZ2dnpFQqWQqr2+0S+CxCIBDgxRl1CXXv/VqKHmissVRH0hONFRZzJD3Q1MbSHElLNLWwOp3Of0g0P+j2+i90TleP/DJasVjUFWsVSRyffkgs0fbFMjwSCzSlWCtIguGRNqAJStF2xTI9khpo27AkpGAwKCH9dDqd7y3zAR8oBoraBW0dlhwSXZXfOawaUNw2tFUs2yEpQZOwbI8k84TjC4UowOoJf9Tn5+ekUChU0+k0PPWQbgF+wXEOjH/QiuKdNpGQXC7XZ9TZjPYDkTDsE38BhSF0jgiMpUIAAAAASUVORK5CYII=
+

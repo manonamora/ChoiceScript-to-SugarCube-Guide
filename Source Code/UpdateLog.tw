@@ -1,0 +1,53 @@
+:: Update Log 
+<h1>Update Log</h1>
+V2.0.0 - 12-Sep-2024
+[12-Sep] - Completed new Guide version
+[12-Sep] - Added final touches
+[12-Sep] - Finished final read-through and corrected issues
+[11-Sep] - Started final read-through
+[11-Sep] - Rephrased chapters for clearer explanations
+[11-Sep] - Fixed formatting of code
+[11-Sep] - Added Settings
+[11-Sep] - Separated Special Passages and Tags
+[11-Sep] - Created the Quick Equivalence Index
+[11-Sep] - Updated the Template page
+[11-Sep] - Added a JavaScript/CSS section
+[11-Sep] - Added Sound, *refs\*params\*bug to Miscellaneous
+[11-Sep] - Added more Styling examples + Images
+[11-Sep] - Merged some Miscellaneous into Variable
+[11-Sep] - Expanded Input Macros
+[10-Sep] - Rephrased chapters for clearer explanations
+[10-Sep] - Fixed formatting of code
+[10-Sep] - Merged Ending with Goto
+[09-Sep] - Rephrased chapters for clearer explanations
+[09-Sep] - Fixed formatting of code
+[09-Sep] - Reorganised IfElse's examples
+[09-Sep] - Expanded Print with examples
+[09-Sep] - Expanded Choices with examples
+[05-Sep] - Rephrased chapters for clearer explanations
+[05-Sep] - Fixed formatting of code
+[05-Sep] - Expanded Variables with examples
+[05-Sep] - Updated Variables page with SugarCube 2.37.3
+[05-Sep] - Explained difference between Macro and Markup
+[05-Sep] - Expanded the Stats page with examples
+[05-Sep] - Expanded the Achievement page with more examples
+[05-Sep] - Move Stats explanation to a separate page
+[04-Sep] - Rephrased chapters for clearer explanations
+[04-Sep] - Fixed formatting of code
+[04-Sep] - Set differences between Twine and Twee
+[04-Sep] - Cleared up differences into new chapter
+[04-Sep] - Re-planned the Guide's structure
+[04-Sep] - Added an Update log
+[04-Sep] - Regoranised the Folder (removed Tweego)
+<hr>
+V1.1.0 - 31-Jul-2023
+[31-Jul] - Added a //Credit// page with sources for code use and Resources list 
+[31-Jul] - Updated the list of Resources
+[31-Jul] - Fixed some typo and formatting issues in both CS to SG and Tweego guides.
+[31-Jul] - Edited some annotations (hidden in code)
+[31-Jul] - Fixed errors and added explanations (Widgets, Metadata, Variables)
+[31-Jul] - Added text file to change IFID
+[31-Jul] - Added a Read Me! text file
+<hr>
+V1.0.0 - 06-Sep-2022
+[06-Sep] - Release of the //ChoiceScript to SugarCube Guide//, with Tweego compiler
