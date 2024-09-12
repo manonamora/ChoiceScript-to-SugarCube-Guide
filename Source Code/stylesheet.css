@@ -223,3 +223,8 @@ html.cursive {
     top: 0;
     right: 0;
 }
+
+img {
+    max-width: 100%;
+}
+  

@@ -11,14 +11,14 @@ ChoiceScript to SugarCube Guide
 
 :: StoryInit
     <<set $intelligence to 50>>
-    <<set $charismatic to 0>>
+    <<set $charismatic to 30>>
     <<set $life to 100>>
 
 :: Start
 <h1>ChoiceScript to SugarCube Guide</h1>
 This Guide was created to help ChoiceScript creators (and their projects) transition to SugarCube, a format of Twine. It is meant to display the differences and similarities between both coding formats, to make it easier going from one to the other.
 
-The content of this Guide was based on the [[ChoiceScript Wiki|https://choicescriptdev.fandom.com/wiki/]], translating that logic into SugarCube's. This Guide will also quickly goes over the differences in using Twine or Tweego when creating a project (all examples formatted the [[Twee Notation|TwineOrTwee]]). However, this guide does not cover all the macros and functionalities of SugarCube (check out [[this guide|https://manonamora.itch.io/twine-sugarcube-guide]] instead) or how to compile with Tweego (check out [[this other guide|https://manonamora.itch.io/ready-to-use-tweego-folder]] instead).
+The content of this Guide was based on the [[ChoiceScript Wiki|https://choicescriptdev.fandom.com/wiki/]], translating that logic into SugarCube's. This Guide will also quickly goes over the differences in using Twine or Tweego when creating a project (all examples formatted the [[Twee Notation|TwineOrTwee]]). However, this guide does not cover how to use Twine (check [[this guide|https://twinery.org/reference/en/]]), all the macros and functionalities of SugarCube (check out [[this guide|https://manonamora.itch.io/twine-sugarcube-guide]] instead) or how to compile with Tweego (check out [[this other guide|https://manonamora.itch.io/ready-to-use-tweego-folder]] instead).
 <hr>
 <center>''Table of Content:''</center>
 * [[About Twine and SugarCube|About]]
@@ -84,11 +84,13 @@ If you want to go further with SugarCube, or require specific assets to further 
 \
 <h2>Official Documentation and Communities</h2>\
 * the [[Twine Reference|https://twinery.org/reference/en/]]: guide on how to use the Twine App
-* the [[Twinery Cookbook|http://twinery.org/cookbook/]]: example of codes for all formats, incl. SugarCube (some may be deprecated)
+* the [[Twinery Cookbook|http://twinery.org/cookbook/]]: example of codes for all formats, incl. SugarCube
+** some may be deprecated, since formats have updated
 * the [[SugarCube documentation|http://www.motoslave.net/sugarcube/2/docs/]]
 * the [[Tweego documentation|https://www.motoslave.net/tweego/docs/]]
 * the [[Interactive Fiction Forum|https://intfiction.org/c/authoring/twine/]]
 ** formerly: [[Twinery Forum|https://twinery.org/forum/discussions]] and [[Twine Q&A|https://twinery.org/questions/]]
+** for all three, the format and version should be indicated in the posts
 * the [[Twine Discord|https://discordapp.com/invite/n5dJvPp]]
 \
 <h2>Useful Guides</h2>\
@@ -135,7 +137,7 @@ The index below will provide the closest equivalence of each ChoiceScript comman
     <tr>
         <td>{{{*author}}}</td>
         <td>{{{:: StoryAuthor}}}</td>
-        <td>TODO:</td>
+        <td>[[Customising with Special Passages|SpeP]]</td>
     </tr>
     <tr>
         <td>{{{*bug}}}</td>
@@ -220,7 +222,7 @@ The index below will provide the closest equivalence of each ChoiceScript comman
     <tr>
         <td>{{{*goto_random_scene}}}</td>
         <td>{{{<<include $var>>}}} (where {{{$var}}} has a random passage name)</td>
-        <td>[[*goto for Calling Scenes and Endings|GoTo]]</td>
+        <td>[[Other Command Equivalents|Miscellaneous]]</td>
     </tr>
     <tr>
         <td>{{{*hide_reuse}}}</td>
@@ -250,7 +252,7 @@ The index below will provide the closest equivalence of each ChoiceScript comman
     <tr>
         <td>{{{*label}}}</td>
         <td>{{{:: PassageName}}}</td>
-        <td>TODO:</td>
+        <td>[[Understanding the Differences in Structures|Structures]]</td>
     </tr>
     <tr>
         <td>{{{*line_break}}}</td>
@@ -263,19 +265,14 @@ The index below will provide the closest equivalence of each ChoiceScript comman
         <td>[[Formatting Text and Images|Formatting]]</td>
     </tr>
     <tr>
-        <td>{{{*more_games}}}</td>
-        <td>N/A</td>
-        <td>TODO:</td>
-    </tr>
-    <tr>
         <td>{{{*page_break}}}</td>
         <td>{{{<<link>>}}}/{{{[[link]]}}}</td>
         <td>[[Having Choices and Linking Passages|Choices]]</td>
     </tr>
     <tr>
         <td>{{{*params}}}</td>
-        <td>...</td>
-        <td>TODO:</td>
+        <td>Through variables set in the choice</td>
+        <td>[[Other Command Equivalents|Miscellaneous]]</td>
     </tr>
     <tr>
         <td>{{{*print}}}</td>
@@ -290,7 +287,7 @@ The index below will provide the closest equivalence of each ChoiceScript comman
     <tr>
         <td>{{{*gotoref}}}</td>
         <td>{{{<<include $var>>}}} (where {{{$var}}} is a passage name)</td>
-        <td>[[*goto for Calling Scenes and Endings|GoTo]]</td>
+        <td>[[Other Command Equivalents|Miscellaneous]]</td>
     </tr>
     <tr>
         <td>{{{*setref}}}</td>
@@ -300,7 +297,7 @@ The index below will provide the closest equivalence of each ChoiceScript comman
     <tr>
         <td>{{{*scene_list}}}</td>
         <td>N/A</td>
-        <td>TODO:</td>
+        <td>[[Understanding the Differences in Structures|Structures]]</td>
     </tr>
     <tr>
         <td>{{{*script}}}</td>
@@ -320,7 +317,7 @@ The index below will provide the closest equivalence of each ChoiceScript comman
     <tr>
         <td>{{{*share_this_game}}}</td>
         <td>N/A</td>
-        <td>TODO:</td>
+        <td>[[*goto for Calling Scenes and Endings|GoTo]]</td>
     </tr>
     <tr>
         <td>{{{*sound}}}</td>
@@ -340,7 +337,7 @@ The index below will provide the closest equivalence of each ChoiceScript comman
     <tr>
         <td>{{{*title}}}</td>
         <td>At Start/{{{:: StoryTitle}}}</td>
-        <td>TODO:</td>
+        <td>[[Starting your Project|Startup]]</td>
     </tr>
 </table><</nobr>>
 
@@ -371,6 +368,7 @@ You can also find resources and help with Twine and SugarCube:
 <h3>A Special Thanks to...</h3>\
 * ''Chris Klimas'' for creating Twine, and ''TheMadExile/TME'' for making the SugarCube format and the Tweego compiler.
 * ''Cycy'' for making the Twee 3 Language Tool extension for VScode.
+* ''Brushmen'' for his [[Template|https://brushmen.itch.io/cs-like-sugarcube-template]]
 * The Twine Discord!
 * and Arlo, who read through the first version of this guide!
 

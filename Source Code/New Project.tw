@@ -28,21 +28,21 @@ For Twine projects, the minimal requirement is the three following passages: {{{
     Your first passage 
     [it can have whatever text/code you want, this is just a place holder]
 }}}
-If you are using Twine, these passages will be set automatically when you start a new project. You only need to name your new project (which can be edited), and Twine will assign it a unique IFID, as well as create an //Untitled// starting passage. For Tweego/[[Twee|TODO:]], you will need to set those manually.
+If you are using Twine, these passages will be set automatically when you start a new project. You only need to name your new project (which can be edited), and Twine will assign it a unique IFID, as well as create an //Untitled// starting passage. For Tweego/[[Twee|About]], you will need to set those manually.
 > ''Note:'' you can generate new IFIDs on [[this website|https://www.tads.org/ifidgen/ifidgen]].
 
 As [[mentioned before|Structures]], Twine does not need a Scene list, since the passages are automatically connected when you create links between them. Even if your are using Tweego with multiple ({{{.tw}}}) files, the connection will still happen during compiling.
 
-Unlike with ChoiceScript, adding the Author's Name is optional in Twine, and will be dependent on the coding format. In SugarCube, this can be done with a [[Special Passage|TODO:]], to appear in the sidebar (usually {{{StoryAuthor}}}).
+Unlike with ChoiceScript, adding the Author's Name is optional in Twine, and will be dependent on the coding format. In SugarCube, this can be done with a [[Special Passage|SpeP]], to appear in the sidebar (usually {{{StoryAuthor}}}).
 
-Similarly for variables, you do not need to define them at the start of the project, as they can be set, unset or modified at any point. However, for longer projects, it is often advised to defined those variable at setup. In SugarCube, this will be achieved through the [[Special Passage|TODO:]] called {{{StoryInit}}}.
+Similarly for variables, you do not need to define them at the start of the project, as they can be set, unset or modified at any point. However, for longer projects, it is often advised to defined those variable at setup. In SugarCube, this will be achieved through the [[Special Passage|SpeP]] called {{{StoryInit}}}.
 
 :: Saves
 <h1>Letting the Player Save</h1>
 Unlike ChoiceScript, Twine comes with saving of the player's progress through the story - defined differently between formats. SugarCube has a built-in Save System, with which players can save their playthroughs either in their browser's cache or in a downloadable file. The Save System saves information about the player's history (passages visited), the value of set variables, and other metadata.
 
-By default, SugarCube comes with 8 browser save slots, an export button for the current save, and an export button to bundle all save slots into a save file. The Saving System can be edited to your wishes, to increase/decrease the amount of save slots, enable Autosaves, or change how saves are named. This must be done in the [[JavaScript passage|TODO:]].
-> ''Note:'' there are [[templates|TODO:]] out there to do this for you.
+By default, SugarCube comes with 8 browser save slots, an export button for the current save, and an export button to bundle all save slots into a save file. The Saving System can be edited to your wishes, to increase/decrease the amount of save slots, enable Autosaves, or change how saves are named. This must be done in the [[JavaScript passage|JS-CSS]], through [[Config|http://www.motoslave.net/sugarcube/2/docs/#config-api-saves]] and [[Save APIs|http://www.motoslave.net/sugarcube/2/docs/#save-api]].
+> ''Note:'' there are [[templates|Templates]] out there to do this for you.
 
 Similar to ChoiceScript playthroughs, saves can be broken if the project has been updated in significant ways, such as defining new variables in {{{StoryInit}}} or change the name of passages. In these cases, players will need to restart their playthroughs. 
 
@@ -52,10 +52,10 @@ Because saving playthroughs require access to the player's browser cache, player
 <h1>Creating a Stats Page</h1>
 Twine does not come with its own Built-In Stats system or Fairmath operator. So, if you want to include a Stats page in your project, you will need to set it wup yourself. This will can be done with a mixture of SugarCube code, HTML/CSS, and JavaScript.
 
-If the task might seem too daunting, there are multiple [[templates|TODO:]] out there to help create stats bars, each having different approaches in its visual and the code running behind it. You can browse and choose which version fits best for your project, and transfer the relevant code.  
+If the task might seem too daunting, there are multiple [[templates|Templates]] out there to help create stats bars, each having different approaches in its visual and the code running behind it. You can browse and choose which version fits best for your project, and transfer the relevant code.  
 \
 <h2>Setting up the Stats Variables</h2>\
-You will first want to [[define all the variables|TODO:]] meant to be used for Stats in the {{{StoryInit}}} [[passage|TODO:]]:
+You will first want to [[define all the variables|Variables]] meant to be used for Stats in the {{{StoryInit}}} [[passage|SpeP]]:
 {{{
     :: StoryInit
     <<set $intelligence to 50>>
@@ -98,7 +98,52 @@ While you could do the whole Fairmath calculation manually when you change the v
     Math.round($var-((100-$var)*(value/100)))
 }}}
 \
-Because editing the formula is tedious, it is simplest to hide it all the calculation inside a Custom Macro ([[this one|https://brushmen.itch.io/cs-like-sugarcube-template]], by brushmen). Add the following code in your [[JavaScript|TODO:]]
+Because editing the formula is tedious, it is simplest to hide it all the calculation inside a Custom Macro ([[this one|https://brushmen.itch.io/cs-like-sugarcube-template]], by brushmen) or set custom [[widgets|GoTo]] for each stats. 
+\
+<h4>Stat-specific widgets</h4>\
+Because widgets can't modify single variables, you need to create a widget for each stat you want to track and modify:
+{{{
+    :: The Widgets [widget nobr]
+    <<widget "PlusIntel">>
+        <<set $intelligence to Math.round($intelligence + ((100 - $intelligence) * (_args[0]/100)))>>
+    <</widget>>
+    <<widget "LessIntel">>
+        <<set $intelligence to Math.round($intelligence - ((100 - $intelligence) * (_args[0]/100)))>>
+    <</widget>>
+}}}
+Then in your passage, when the variable needs to be modified:
+{{{
+    :: IntelCheck
+    <<PlusIntel 50>>
+    <<LessIntel 4>>
+}}}
+It is also possible to make the widget a tad more complex to work for any stat you are tracking:
+{{{
+    :: The Widgets [widget nobr]
+    <<widget "Fairmath">>
+        <<if _args[0] is "intelligence" && _args[1] > 0>>
+            <<set $intelligence to Math.round($intelligence + ((100 - $intelligence) * (_args[1]/100)))>>
+        <<elseif _args[0] is "intelligence" && _args[1] < 0>>
+            <<set $intelligence to Math.round($intelligence - ((100 - $intelligence) * (_args[1]/100)))>>
+        <<elseif _args[0] is "strength" && _args[1] > 0>>
+            <<set $strength to Math.round($strength + ((100 - $strength) * (_args[1]/100)))>>
+        <<elseif _args[0] is "strength" && _args[1] < 0>>
+            <<set $strength to Math.round($strength - ((100 - $strength) * (_args[1]/100)))>>
+        
+        /* ... repeat with <<elseif>> for each new stat */
+
+        <</if>>
+    <</widget>>
+}}}
+And in the passage:
+{{{
+    :: StatCheck 
+    <<Fairmath "strength" -3>>
+    <<Fairmath "intelligence" 55>>
+}}}
+\
+<h4>Custom Macro</h4>\
+Add the following code in your [[JavaScript|JS-CSS]]:
 {{{
     //<<fairmath>> macro, by brushmen
     Macro.add('fairmath', {
@@ -118,7 +163,7 @@ Because editing the formula is tedious, it is simplest to hide it all the calcul
 You can then use that custom macro in any passage where you need to increase/decrease those stats.
 {{{
     <<fairmath "$intelligence" -5>>
-	<<fairmath "$charismatic" 5>>
+    <<fairmath "$charismatic" 5>>
 }}}
 The first will have a 5% decrease in its value, while the second line will see a 5% increase. 
 \
@@ -129,16 +174,16 @@ When you have your stats all set up, you can start thinking about how to display
 * display a stat's bar 
 \
 <h3>Display a plain Value</h3>\
-For stats like age, coins, skill levels, or life points, you will want to [[display the value|TODO:]] of the variable as is on the screen:
+For stats like age, coins, skill levels, or life points, you will want to [[display the value|Print]] of the variable as is on the screen:
 {{{
     ''Health:'' $life 
     ''Wealth:'' $coins
     ''Glass-making:'' $glassLevel
 }}}
-> ''Note:'' you can also use the {{{<<print>>}}} [[macro|TODO:]] if you prefer.
+> ''Note:'' you can also use the {{{<<print>>}}} [[macro|Print]] if you prefer.
 \
 <h3>Display Text Variation</h3>\
-For stats like how positive/negative an NPC or group sees the players, or for additional text flavour to add along another stat, you can use [[conditional statements|TODO:]] to display text variation:
+For stats like how positive/negative an NPC or group sees the players, or for additional text flavour to add along another stat, you can use [[conditional statements|IfElse]] to display text variation:
 {{{
     <<if $relation is 0>>
         P wants to kill you.
@@ -155,11 +200,11 @@ For stats like how positive/negative an NPC or group sees the players, or for ad
     <<else>>
         P worships you.
     <</if>>
-}}} 
-> ''Note:'' if you are using other operators than {{{is}}} or {{{isnot}}}, you will need to order them from most constraining to least constraining.
+}}}
+> ''Note:'' when using conditional statements, you will need to order them from most constraining to least constraining.
 \
 <h3>Display Stats Bars</h3>\
-This final option can be fairly easy, but customising it can make it pretty complex. Unlike the options above, there isn't a SugarCube macro that will create a stats bar for you. There are, however, [[templates and custom macros|TODO:]] that can help you create them.
+This final option can be fairly easy, but customising it can make it pretty complex. Unlike the options above, there isn't a SugarCube macro that will create a stats bar for you. There are, however, [[templates and custom macros|Templates]] that can help you create them.
 
 The easiest method is to use HTML elements to create your stats bar, like the {{{<meter>}}} or {{{<progress>}}} elements. These elements come pre-styled by the browser in use. So if you want to modify their appearances, you will need to style them manually <small>(see //Creating Stats, Meter, and Progress Bars// section of [[this guide|https://manonamora.itch.io/twine-sugarcube-guide]])</small>.
 <meter @value="$intelligence" min="0" max="100"></meter> | <progress @value="$charismatic" max="100"></progress>
@@ -185,7 +230,7 @@ You can also create a stat bar from scratch with {{{<div>}}} and {{{<span>}}} el
     </div>
 }}}
 <<DoubleStat>>
-<details><summary>The Styling of for those bars</summary>
+<details><summary>''//The Styling of for those bars//'' (click me!)</summary>
 It's ugly, but it works. The point is that you can do whatever!
 Also should go in your StyleSheet:
 {{{
@@ -214,12 +259,12 @@ Also should go in your StyleSheet:
 
 :: Achievements
 <h1>Notes on Achievements</h1>
-Unlike ChoiceScript, Twine does not come with a Built-In system for Achievements. There are not special functions to create or update the achievements. You will need to set it up manually, which can be relatively easy or more complex depending on the way chosen. This section will go over the different SugarCube substitutes for {{{*achievement}}} and {{{*achieve}}}.
+Unlike ChoiceScript, Twine does not come with a Built-In system for Achievements. There are no special functions to create or update the achievements. You will need to set it up manually, which can be relatively easy or more complex depending on the way chosen. This section will go over the different SugarCube substitutes for {{{*achievement}}} and {{{*achieve}}}.
 
 Creating achievements can be done in two major ways: through a variable or by relying on metadata (cache). There isn't much difference between the two methods, aside from how they are save: the Variable way will work closer to ChoiceScript's Achievements (applied to one playthrough), while the Metadata will apply to all playthroughs on a device (until the cache is deleted).
-> ''Note:'' for saves reason, the first method is more recommended.
+> ''Note:'' for saves reason, the first method is recommended.
 
-You will need to know which passages will trigger each of the achievements, as well as a separate passage where you will display those achievements (let's call it: {{{Achievements}}}). The actual display of the achievements will be done with [[conditional statements|IfElse]] for regular variables, and JavaScript functions for the MetaData.
+You will need to know which passages will trigger each of the achievements, as well as creating a separate passage to display those achievements (let's call it: {{{Achievements}}}). The actual display of the achievements will be done with [[conditional statements|IfElse]] for regular variables, and JavaScript functions for the MetaData.
 \
 <h2>Simple Variable Achievements</h2>\
 This is the most basic way of creating achievements, as it relies on simple variables to track whether an achievement has been earned or not. You can use either [[types of variables|Variables]] for this: a regular variable for each achievement, or an object/array to group achievements inside one variable. 
@@ -286,17 +331,17 @@ In the {{{Achievements}}} passage, you will code conditional statements to check
 Repeat the conditional statements until all achievements are listed.
 \
 <h2>The ChoiceScript version</h2>\
-If you want your code to be as similar to ChoiceScript's {{{.achievement}}}/{{{.achieve}}} code as possible (setting up the achievements and displaying them) you can do something like the following. This is essentially a more complex-looking version of the Simple Variable object form (see above), but with extra setup (a [[widget|TODO:]]).
+If you want your code to be as similar to ChoiceScript's {{{.achievement}}}/{{{.achieve}}} code as possible (setting up the achievements and displaying them) you can do something like the following. This is essentially a more complex-looking version of the Simple Variable object form (see above), but with extra setup (a [[widget|GoTo]]).
 \
 <h3>Creating Achievements</h3>\
-For this way to work, you will need to set up each of your achievements as objects, which will include all the information about that achievement. You will have to define those objects in {{{StoryInit}}}.
+For this way to work, you will need to set up each of your achievements as objects, which will include all the information about that achievement. You will have to define those objects in he {{{StoryInit}}} [[passage|SpeP]].
 {{{
     :: StoryInit
     <<set $codename to {
         gotten: true/false,
         visible: true/false,
         pointValue: number,
-        title: "Tile",
+        title: "Title",
         preEarned: "Description Pre-Earned",
         postEarned: "Description Achieved"
     }>>
@@ -314,7 +359,7 @@ For this way to work, you will need to set up each of your achievements as objec
 > ''Note:'' if {{{visible}}} is //false//, you won't need the line {{{preEarned}}}.
 \
 <h3>Setting up the Widgets</h3>\
-To make the rest of the implementation easier, you will need to add the following widgets to your project, in a passage [[tagged|TODO:]] {{{widget}}} and {{{nobr}}}. The first widget will do the same thing as {{{.achieve}}}, while the second will make displaying the achievements easier on the page (it will take into account whether it should be visible or not).
+To make the rest of the implementation easier, you will need to add the following widgets to your project, in a passage [[tagged|Tags]] {{{widget}}} and {{{nobr}}}. The first widget will do the same thing as {{{.achieve}}}, while the second will make displaying the achievements easier on the page (it will take into account whether it should be visible or not).
 {{{
     :: Widget [widget nobr]
     <<widget "achieve">>
@@ -374,11 +419,11 @@ SugarCube does not come with its own notification element, like ChoiceScript doe
 ''Note:'' Chapel has a neat [[popup set|https://github.com/ChapelR/custom-macros-for-sugarcube-2/blob/master/docs/dialog-api-macro-set.md]] to make popups less daunting to set up.
 > //Custom Macro//:
 In this case, how to set up the notification will depend on the specific custom macro you choose. Chapel's [[notify macro|https://github.com/ChapelR/custom-macros-for-sugarcube-2/blob/master/docs/notify-macro.md]] and Sjoerd [[Flash macro|https://github.com/SjoerdHekking/custom-macros-sugarcube2/tree/main/Notification]] are the most well known/established custom macro to create notifications.
-''Note:'' Sjoerd's macro is more ARIA-accessible for screen readers than Chapel's.
+> ''Note:'' Sjoerd's macro is more ARIA-accessible for screen readers than Chapel's.
 
 :: SpeP
 <h1>Customising with Special Passages</h1>
-Along with [[Special Tags]], you can customise your project further by using some of the ''Special Passage''. By naming a passage with one of the following Special Names, you will enable a special functionality or placement for the content of that passage. This list is non-exhaustive.
+Along with [[Special Tags|Tags]], you can customise your project further by using some of the ''Special Passage''. By naming a passage with one of the following Special Names, you will enable a special functionality or placement for the content of that passage. This list is non-exhaustive.
 > ''Note:'' these names are //case-sensitive//, so you //must// capitalise where indicated.
 \
 * {{{StoryInit}}}: runs during initialisation, most useful for [[setting variables|Variables]] and [[cache audio tracks|Miscellaneous]]
@@ -398,7 +443,7 @@ Along with [[Special Tags]], you can customise your project further by using som
 <h1>Customising with Tags</h1>
 Along with [[Special Passages|SpeP]], you can use tags to create specific functionalities for passages or to customise them.
 
-In Twine, you can create a tag by clicking on the //+ Tag// button when a passage is opened. In Twee, tags should be located inside straight brackets {{{ [] }}}, and can contain any characters (though you may want to stick to {{{a → z}}}, {{{0 → 9}}}, and {{{-}}}). You can add as many tags as you want for a single passage, separating them with a space:
+In Twine, you can create a tag by clicking on the //{{{+ Tag}}}// button when a passage is opened. In Twee, tags should be located inside straight brackets {{{ [] }}}, and can contain any characters (though you may want to stick to {{{a → z}}}, {{{0 → 9}}}, and {{{-}}}). You can add as many tags as you want for a single passage, separating them with a space:
 {{{
     :: Passage [tag-1 tag2 etc]
 }}}
@@ -427,7 +472,7 @@ SugarCube includes 3 general special tags:
 * {{{init}}}: a code-only passage that runs once at the start of the game
 ** this is particularly useful for add-ons/library. For variables, the {{{StoryInit}}} [[Special Passage|SpeP]] should be used 
 * {{{nobr}}}: will remove any line break in the coded passage.
-** mainly useful for {{{<<widget>>}}}
+** most useful with {{{<<widget>>}}}
 * {{{widget}}}: lets you defined {{{<<widget>>}}} ("custom macros"), loaded at the start of the game
 \
 <h2>Custom Tags</h2>\

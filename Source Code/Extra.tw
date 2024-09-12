@@ -25,18 +25,21 @@ It will only appear with passages with the tag ''twine''
 <hr><</if>>
 
 :: Styling [twine]
-!Heading 1\
-!!Heading 2\
-!!!Heading 3\
-!!!!Heading 4\
-!!!!!Heading 5\
-!!!!!!Heading 6\
+> ''Note:'' the following is influenced by styling rules coded in the StyleSheet of the Guide.
+!Heading 1
+!!Heading 2
+!!!Heading 3
+!!!!Heading 4
+!!!!!Heading 5
+!!!!!!Heading 6
 <hr>
 <center>Lists:</center>
 * Item 1
+** Indented
 * Item 2
 \
 # Item 1
+## Indented
 # Item 2
 <hr>
 <center>Basic Table:</center>

@@ -14,7 +14,7 @@ Some commands only take one line (e.g. {{{*set}}}), while others will need multi
                 *other_command
 }}}
 
-Twine, on the other hand, works with both macros and markup. Macros are similar to commands, in that they will tell the program that code must be run. Markup is a notation that will indicate [[styling|TODO:]], mainly used as a replacement for HTML.
+Twine, on the other hand, works with both macros and markup. Macros are similar to commands, in that they will tell the program that code must be run. Markup is a notation that will indicate [[styling|Formatting]], mainly used as a replacement for HTML.
 
 Macros are formatted with {{{<< >>}}}, wrapped around the code.
 {{{
@@ -28,7 +28,7 @@ There are two forms of macros: a one-block macro and a container macro. The one-
     <</if>>
 }}}
 \
-One exception can be found in links, which can be both formatted as Macro and Markup. And they can also be mixed.
+One exception can be found with {{{<<link>>}}}, which can be both formatted as Macro and Markup, as well as mixed.
 {{{
  → Markup:
     [[Link]]
@@ -46,20 +46,20 @@ The Markup form is particularly useful to quickly create links, as well as form 
 <h1>Variables: Types, Defining, Modifying and Deleting</h1>
 Between ChoiceScript and Twine, the base use of variables are almost identical: both have temporary and permanent variables, the first disappearing when moving to a new scene and the second sticking throughout the game. In both, variables can be numerical, strings, or boolean, and their names are case-sensitive.
 
-The biggest difference is when the permanent variables are define. ChoiceScript requires all permanent variables to be defined in {{{startup.txt}}}, while in Twine, it is optional. As such, you can set variables whenever and wherever you want or need.
+The biggest difference is when the permanent variables are defined. ChoiceScript requires all permanent variables to be defined in {{{startup.txt}}}; while in Twine, defining in {{{StoryInit}}} is optional. You can set variables whenever and wherever you want or need.
 
-Another difference comes with the macro used to set those variables. ChoiceScript uses {{{*create}}} to defined permanent variables and {{{*set}}} to modify its value, as well as {{{*temp}}} to create a temporary variable. SugarCube, on the other hand, uses {{{<<set>>}}} for everything. 
+Another difference comes with the macro used to set those variables. ChoiceScript uses {{{*create}}} to define permanent variables and {{{*set}}} to modify its value, as well as {{{*temp}}} to create a temporary variable. SugarCube, on the other hand, uses {{{<<set>>}}} for everything. 
 
 As well, while the different {{{*commands}}} require one line for each variable, {{{<<set>>}}} can create or edit multiple variables (and of multiple types) at once:
 {{{
     <<set $variable to true, _variable to 3, setup.variable to "Henry">>
-}}} 
+}}}
 
-To differentiate between temporary and permanent variables, Twine formats these variables differently: using an underscore ({{{_temporary}}}) or a dollar sign ({{{$permanent}}}) as the starting point. As well, you can only use the basic alphabetical (a → z, A → Z) and numerical (0 → 9) characters to create a variable's name. Punctuations and other special characters (e.g. {{{-}}}) won't be accepted.
+To differentiate between temporary and permanent variables, Twine formats these variables differently: using an underscore ({{{_temporary}}}) or a dollar sign ({{{$permanent}}}) as the starting point. After that, you can only use the basic alphabetical ({{{a → z}}}, {{{A → Z}}}) and numerical ({{{0 → 9}}}) characters to create a variable's name. Punctuations and other special characters (e.g. {{{-}}}) won't be accepted.
 \
 <h2>Setting and Modifying Variables</h2>\
 <h3>Temporary Variables</h3>\
-Like with ChoiceScript, you can create a temporary variable ({{{_temp}}}), set a value (and modify it), and let it disappear when moving to a new passage (unset automatically). Temporary variables are particularly useful to tract interactions within on passage, making quick calculations (like an RNG check), and in [[widgets|TODO:]].
+Like with ChoiceScript, you can create a temporary variable ({{{_temp}}}), set a value (and modify it), and let it disappear when moving to a new passage (unset automatically). Temporary variables are particularly useful to tract interactions within on passage, making quick calculations (like an RNG check), and in [[widgets|GoTo]].
 {{{
  → ChoiceScript
     *temp var 3 | *temp var false | *temp var "Henry"
@@ -84,7 +84,7 @@ As previously mentioned permanent variables do not need to be defined at startup
 > ''Note:'' for larger games, it is recommended to keep the amount of permanent variables being active at the same time to a minimum. To reduce potential lag, merging variables into objects or arrays, using JavaScript or temporary variables, [[SugarCube functions|https://www.motoslave.net/sugarcube/2/docs/#functions]], or even unset them.
 \
 <h3>Fixed variables</h3>\
-Since SugarCube is based on JavaScript, you can create "JavaScript" variables to save information. More specifically: information that will not change over the course of the game (e.g. item price). These variables should only be set at the start (either in the {{{StoryInit}}} [[passage|TODO:]] or in [[JavaScript|TODO:]]), and no change to that variable will be saved. Instead of a character to announce the variable, this one starts with {{{setup.}}}
+Since SugarCube is based on JavaScript, you can create "JavaScript" variables to save information. More specifically: information that will not change over the course of the game (e.g. item price). These variables should only be set at the start (either in the {{{StoryInit}}} [[passage|SpeP]] or in [[JavaScript|JS-CSS]]), and no change to that variable will be saved. Instead of a character to announce the variable, this one starts with {{{setup.}}}
 {{{
     <<set setup.number to 3, setup.test to false, setup.name to "Henry">>
 }}}
@@ -92,7 +92,7 @@ Since SugarCube is based on JavaScript, you can create "JavaScript" variables to
 <h3>Objects and Arrays</h3>\
 Again, because SugarCube is based on JavaScript, you can also create objects and arrays in your project, either as a temporary, permanent, or setup variable. They can also be mixed (an object filled with arrays, or an arrays filled with objects). In both cases, if you want to add elements to objects and arrays, you will need to ensure the variables are defined as such beforehand.
 
-Objects ({{{object.{}}}}) are collections of other variables, each saved as a {{{property}}} of the object. They are most useful when grouping variables of a certain use (e.g. pronouns, PC appearance, item characteristics, etc..).
+Objects ({{{object.{} }}}) are collections of other variables, each saved as a {{{property}}} of the object. They are most useful when grouping variables of a certain use (e.g. pronouns, PC appearance, item characteristics, etc..).
 {{{
  → Define object (empty):
     <<set $object to {}>>
@@ -120,7 +120,7 @@ Arrays ({{{array.[]}}}) are ordered series of values (strings, numbers, boolean)
     <<set $array.push("Apple", 4, false)>>
 }}}
 
-> ''Note:'' In an object or array is set as a {{{setup.}}} variable, they cannot be edited.
+> ''Note:'' If an object or array is set as a {{{setup.}}} variable, they cannot be edited.
 \
 <h2>Deleting Variables</h2>\
 While this will be automatic for temporary variables when the player moves to a new passage, you will need to use a separate macro to delete permanent variables: {{{<<unset>>}}}. Like its setting counterpart, this macro can unset multiple variables at once.
@@ -133,7 +133,7 @@ While this will be automatic for temporary variables when the player moves to a 
     <<unset $object.property>>
     <<set $array.deleteAt[0], $array.deleteAll('Apple')>>
 }}}
-
+\
 > ''Notes:'' for all possible ways to change a variable's value, you can find all accepted operators in the [[SugarCube documentation|http://www.motoslave.net/sugarcube/2/docs/#twinescript-operators]]. Modifying arrays is a bit more complex, requiring the use of [[methods|http://www.motoslave.net/sugarcube/2/docs/#methods-array]].
 \
 <h2>Other Variable Commands or Modifications</h2>\
@@ -214,7 +214,7 @@ If your story branches out into two or more distinct paths (at least for a secti
 }}}
 \
 <h2>"Fake" Choices</h2>\
-Twine does not make a difference between a real and a fake choice when coding, only sending the player to a new section. It is still possible to emulate this "fake" choice with a combination of a link, a [[variable|Variables]], and a [[conditional statement|TODO:]].
+Twine does not make a difference between a real and a fake choice when coding, only sending the player to a new section. It is still possible to emulate this "fake" choice with a combination of a link, some [[variables|Variables]], and a [[conditional statement|IfElse]].
 {{{
  → ChoiceScript
     Jolene taps her fingers on the desk, waiting for me to say something...
@@ -237,7 +237,7 @@ Twine does not make a difference between a real and a fake choice when coding, o
 }}}
 \
 <h2>{{{*selectable_if}}} Choices</h2>\
-Similarly to ChoiceScript, SugarCube can displays //some// choices if the defined conditions are met, by using [[conditional statements|TODO:]].
+Similarly to ChoiceScript, SugarCube can displays //some// choices if the defined conditions are met, by using [[conditional statements|IfElse]].
 {{{
  → ChoiceScript
     For dinner, I think I'll have...
@@ -256,10 +256,10 @@ Similarly to ChoiceScript, SugarCube can displays //some// choices if the define
 > ''Note:'' {{{*selectable_if}}} automatically greys out an unavailable option in ChoiceScript. In SugarCube, you will need to do this manually, by wrapping the "disabled" element in an {{{<span>}}} and adding styling. Like:
 > {{{<span style="background:grey;">Disabled Text</span>}}}
 > {{{<span class="disabled">Disabled Text</span>}}}
-> with the latter being styled in the [[Stylesheet|TODO:]]
+> with the latter being styled in the [[StyleSheet|JS-CSS]]
 \
 <h2>Reuse Choices</h2>\
-While there are no comparable macros to the reuse commands in SugarCube, you can still emulate their functionalities by using [[conditional statements|TODO:]] to "disable" or hide choices. The difference between the two will be whether to add an {{{<<else>>}}} element to display the choice, but not allowing it to be selectable.
+While there are no comparable macros to the reuse commands in SugarCube, you can still emulate their functionalities by using [[conditional statements|IfElse]] to "disable" or hide choices. The difference between the two will be whether to add an {{{<<else>>}}} element to display the choice, but not allowing it to be selectable.
 {{{
  → ChoiceScript
     *label Dinner
@@ -285,13 +285,13 @@ While there are no comparable macros to the reuse commands in SugarCube, you can
 > ''Note:'' {{{*disable_reuse}}} automatically greys out an option in ChoiceScript. In SugarCube, you will need to do this manually, by wrapping the "disabled" element in an {{{<span>}}} and adding styling. Like:
 > {{{<span style="background:grey;">Disabled Text</span>}}}
 > {{{<span class="disabled">Disabled Text</span>}}}
-> with the latter being styled in the [[Stylesheet|TODO:]]
+> with the latter being styled in the [[StyleSheet|JS-CSS]]
 \
 <h2>Nested Choices</h2>\
 Nested choices are also possible in SugarCube, though they will appear differently than in ChoiceScript. Rather than going to another page, the choice list will be replaced with the new text. Like with ChoiceScript, you can nest as many choices as you'd like (though by the 2nd-3rd nest, it may become difficult to keep track of the options).
 > ''Note:'' refreshing the page after clicking on a nested choice will undo any change made, since Twine only saves when players move to a new passage.
 \
-To do this, you will need to use one of the more advanced macro: {{{<<replace>>}}}.
+To do this, you will need to use one of the more advanced macros: {{{<<replace>>}}}.
 {{{
  → ChoiceScript
     What do you want?
@@ -382,7 +382,7 @@ To change the letter case of a value, SugarCube requires from functions (JavaScr
 > {{{<<set $var to $var.toLowerCase()>>}}}
 \
 <h2>Extract Letters</h2>\
-If you wish to, you can also extract a letter from a [[string variable|TODO:]], by using the JavaScript function: {{{.charAt(i)}}}.
+If you wish to, you can also extract a letter from a string variable (words), by using the JavaScript function: {{{.charAt(i)}}}.
 > ''Note:'' this function is pure JavaScript, and thus undocumented in SugarCube.
 {{{
  → ChoiceScript
@@ -485,7 +485,7 @@ Below, you will find a table with the different substitutes between ChoiceScript
     </tr>
 </table>
 <</nobr>>
-A very useful operator in SugarCube is {{{def}}} and {{{ndef}}}, which will respectively check whether the variable is defined or not.
+Another couple of very useful operators in SugarCube is {{{def}}} and {{{ndef}}}, which will respectively check whether the variable is defined or not.
 {{{
     <<if def $var>>
         /* Something happens */
@@ -495,7 +495,7 @@ A very useful operator in SugarCube is {{{def}}} and {{{ndef}}}, which will resp
         /* Something happens */
     <</if>>
 }}}
-\
+
 <h2>{{{<<elseif>>}}} and {{{<<else>>}}}</h2>\
 If you have alternative variations that you want to display on the screen, or other code to run, you will use {{{<<elseif>>}}} for a defined condition and {{{<<else>>}}} for the rest. It works the same as with ChoiceScript.
 {{{
@@ -550,12 +550,12 @@ There is also the {{{<<switch>>}}} macro, which will do a similar thing, as long
 
     The man looks at you with <<switch $attitude>><<case 1>>hate<<case 2 3 4>>indifference<<case 5>>kindness<<default>>love<</switch>>.
 }}}
-For other use of the {{{<<switch>>}}} macro, see [[this page|TODO:]].
+For other use of the {{{<<switch>>}}} macro, see [[this page|Miscellaneous]].
 
 :: GoTo 
 <h1>*goto for Calling Scenes and Endings</h1>
-Because Twine and ChoiceScript are [[structured differently]], there are functions that are not translatable between the two formats. This is the most apparent with the {{{*goto}}} and {{{*gosub}}} commands, as well as {{{*finish}}} and {{{*ending}}}.
-> ''Warning!'' SugarCube has a {{{<<goto>>}}} macro, which is not the {{{*goto}}} equivalent, because the player will be //''sent'' to a completely ''new'' page//. {{{<<goto>>}}} is like a link, without the required clicking.
+Because Twine and ChoiceScript are [[structured differently|Structures]], there are commands that are not translatable between the two formats. This is the most apparent with the {{{*goto}}} and {{{*gosub}}} commands, as well as {{{*finish}}} and {{{*ending}}}.
+> ''Warning!'' SugarCube has a {{{<<goto>>}}} macro, which ''is not'' the {{{*goto}}} equivalent, because the player will be //''sent'' to a completely ''new'' page//. {{{<<goto>>}}} is like a link, without the required clicking.
 \
 The closest substitution for those {{{*goto}}} commands can be found with either the {{{<<include>>}}} macro or a customised {{{<<widget>>}}}. Instead of jumping to a specific line on the file, those macros will display the content of another Passage (for {{{<<include>>}}}) or of the widget. Thanks to this, you can call those macros at any point in the page.
 > ''Note:'' you can also call those macros as many time as you want, in the same or different passages.
@@ -583,7 +583,7 @@ The simplest way to create a {{{*goto}}}-like display is by using the {{{<<inclu
 }}}
 \
 <h2>Using {{{<<widget>>}}}</h2>\
-Widgets are slightly more complex, as it requires one special [[tag|TODO:]] to define the macro. Like with {{{<<include>>}}}, you will need two passages: the main one that the player will visit, and a second one where you will define the widget. That second passage ''must'' have the tag {{{widget}}} attached to it.
+Widgets are slightly more complex, as it requires one special [[tag|Tags]] to define the macro. Like with {{{<<include>>}}}, you will need two passages: the main one that the player will visit, and a second one where you will define the widget. That second passage ''must'' have the tag {{{widget}}} attached to it.
 > ''Note:'' you can define as many widgets as you want in that widget passage.
 {{{
     :: Passage 
@@ -603,12 +603,12 @@ Widgets are slightly more complex, as it requires one special [[tag|TODO:]] to d
 <h2>{{{<<include>>}}} or {{{<<widget>>}}}?</h2>\
 While the player will experience those two macros the same way, the macros are coded quite differently, as shown by the examples above. The main difference is in the way the macros use the side passage: {{{<<include>>}}} will use the whole, while {{{<<widget>>}}} only cares for what is defined inside its macro.
 
-Another important point comes with namings. Since {{{<<include>>}}} require the name of a passage, that passage can include any characters, including whitespace and punctuation. On the other hand, {{{<<widget>>}}} can ''only'' be named with the basic alphabet ({{{a → z}}}, {{{A → Z}}}) and numbers (''except'' as the first character).
+Another important point comes with namings. Since {{{<<include>>}}} require the name of a passage, that passage can include any characters, including whitespace and punctuation. On the other hand, {{{<<widget>>}}} is not bound to this, though it can ''only'' be named with the basic alphabet ({{{a → z}}}, {{{A → Z}}}) and numbers (anywhere ''except'' as the first character).
 
-Finally, {{{<<widget>>}}} allows for extra customisation, such as passing parameters (i.e. indicating a variable) or turning it into a container. This essentially turns it into a customised macro. This being more of an advanced option, see [[SugarCube Documentation|https://www.motoslave.net/sugarcube/2/docs/#macros-macro-widget]] for more details.
+Finally, {{{<<widget>>}}} allows for extra customisation, such as passing parameters (i.e. indicating a variable or value) or turning it into a container. This essentially turns it into a customised macro. Since these are advanced options, see [[SugarCube Documentation|https://www.motoslave.net/sugarcube/2/docs/#macros-macro-widget]] for more details.
 \
 <h2>{{{*finish}}} a Scene</h2>\
-While this command is essential to tell the program to stop reading this particular scene, this isn't needed in Twine games, because of the Passage Structure. If you want to move the player to a new section of the game, like a new chapter, you only need to create a link to a new passage:
+While this command is essential to tell ChoiceScript to stop reading this particular scene and move on to the next one, this isn't needed in Twine games, because of the [[Passage Structure|Structures]]. If you want to move the player to a new section of the game, like a new chapter, you only need to create a link to a new passage:
 {{{
     [[End Chapter|Chapter85936759]]
     <<link "End Chapter" "Chapter85936759">>
@@ -616,7 +616,7 @@ While this command is essential to tell the program to stop reading this particu
 And, that's it.
 \
 <h2>Ending the Game</h2>\
-As mentioned above there is no equivalence to the {{{*ending}}} command to //End// the game, and include restarting or sharing buttons. In Twine, a game will end when the player has no other link to the progress the story further. This means that you will have more control over the customisation of this final page.
+As mentioned at the start, there is no equivalence to the {{{*ending}}} command to //End// the game, and include restarting or sharing buttons. In Twine, a game will end when the player has no other link to the progress the story further. This means that you will have more control over the customisation of this final page.
 \
 <h3>Restart the Game</h3>\
 Unlike in ChoiceScript, you have two different ways to restart the game: with the {{{UI.restart()}}} API or a regular link sending the player back to the starting page. The first is the equivalent to the ChoiceScript //Play Again// choice, while the second allows the inclusion of a [[NewGame+|https://en.wikipedia.org/wiki/New_Game_Plus]] option.
@@ -628,11 +628,11 @@ Unlike in ChoiceScript, you have two different ways to restart the game: with th
 > ''Note:'' you are not limited to a link, you can use the {{{<<button>>}}} macro instead.
 \
 <h3>Share the Game</h3>\
-Twine does not have a specific script that will allow players to share the game on other platforms. If you want a specific //Share to [Platform]// link, you will need to create it yourself (or check for a plain HTML plug-in on the internet). Though, you are still free to add as many [[external hyperlinks|TODO:]] as you want (e.g. towards a promotional post on Tumblr).
+Twine does not have a specific script that will allow players to share the game on other platforms. If you want a specific //Share to [Platform]// link, you will need to create it yourself (or check for a plain HTML plug-in on the internet). Though, you are still free to add as many [[external hyperlinks|Formatting]] as you want (e.g. towards a promotional post on Tumblr).
 
 :: Input
 <h1>Add Player Input and Interactivity</h1>
-Along with the equivalence of {{{*input_text}}} and {{{*input_number}}} from ChoiceScript, SugarCube includes many interactive macros to let player input elements, choose options, or simply add Interactivity to the page. These macros can define and/or modify variables when interacted with.
+Along with the equivalence of {{{*input_text}}} and {{{*input_number}}} from ChoiceScript, SugarCube includes many interactive macros to let player input elements, choose options, or simply add extra interactivity to the page. These macros can define and/or modify variables when interacted with.
 \
 <h2>Text and Number Input</h2>\
 The equivalent SugarCube macros for {{{*input_text}}} and {{{*input_number}}} are respectively {{{<<textbox>>}}} and {{{<<numberbox>>}}}. A major difference between the commands and the macro is that SugarCube allows an initial value to be indicated in the inputbox (and it's optional).
@@ -648,7 +648,7 @@ The equivalent SugarCube macros for {{{*input_text}}} and {{{*input_number}}} ar
 > ''Note:'' you can't indicate a range for input in the {{{<<numberbox>>}}}, but you can get the [[Numberpool custom macro|http://www.motoslave.net/sugarcube/2/#downloads]] to do the job.
 \
 <h2>Other Interactive Macros</h2>\
-Aside from regular [[links|TODO:]] and the input macros above, there are 4 extra interactive macros that you can add to your project. These macros can define and/or modify variables to include string, numerical, and boolean values.
+Aside from regular [[links|Choices]] and the input macros above, there are 4 extra interactive macros that you can add to your project. These macros can define and/or modify variables to include string, numerical, and boolean values.
 \
 <h3>Checkboxes</h3>\
 Often used for character creations or for inventory, the {{{<<checkbox>>}}} allows players to select multiple choices at once. For the full customisation, see the [[SugarCube Documentation|https://www.motoslave.net/sugarcube/2/docs/#macros-macro-checkbox]]
@@ -679,7 +679,7 @@ If you want to display your choices in the same was as with ChoiceScript, you ca
     <<radiobutton  "$choice" true>> Option 3
     <<button [[Confirm|NextPassage]]>><</button>>
 }}}
-> ''Note:'' for a ChoiceScript-like interface, see the [[templates section|TODO:]].
+> ''Note:'' for a ChoiceScript-like interface, see the [[templates section|Templates]].
 \
 <h3>Cycling Links</h3>\
 With the {{{<<cycle>>}}} macro, you can create a fake link, which will cycle through defined options when clicked. This macro is quite useful for character customisation as well as interactive text variation. For the full customisation, see the [[SugarCube Documentation|https://www.motoslave.net/sugarcube/2/docs/#macros-macro-cycle]].
@@ -694,7 +694,7 @@ With the {{{<<cycle>>}}} macro, you can create a fake link, which will cycle thr
 }}}
 \
 <h3>Listboxes</h3>\
-{{{<<listbox>>}}} will add a retractable list of option the player can choose from. This is the base elements for [[List Settings|TODO:]], and is quite useful for character creation as well as selection of items or location. For the full customisation, see the [[SugarCube Documentation|https://www.motoslave.net/sugarcube/2/docs/#macros-macro-listbox]].
+{{{<<listbox>>}}} will add a retractable list of option the player can choose from. This is the base elements for [[List Settings|Settings]], and is quite useful for character creation as well as selection of items or location. For the full customisation, see the [[SugarCube Documentation|https://www.motoslave.net/sugarcube/2/docs/#macros-macro-listbox]].
 {{{
     <<listbox "$lbanswer" autoselect>>
         <<option "Towel">>
@@ -713,7 +713,7 @@ SugarCube has a third input macro, along with {{{<<textbox>>}}} and {{{<<numberb
 
 :: Formatting
 <h1>Formatting Text and Images</h1>
-Compared to ChoiceScript, there is a lot more freedom to format your text in Twine. Because you can use HTML, you can essentially do anything a normal webpage would accept, whether it is bolding or italicise text, as well as changing colour and alignment, and even placement on the screen.
+Compared to ChoiceScript, there is a lot more freedom to format your text in Twine. Because it allows HTML, you can essentially do anything a normal webpage would accept, whether it is bolding or italicise text, as well as changing colour and alignment, and even placement on the screen.
 
 This section will cover the formatting Markup in SugarCube equivalent to the ChoiceScript commands. You can find the full list of formatting Markup in the [[SugarCube Documentation|http://www.motoslave.net/sugarcube/2/docs/#markup-style]].
 \
@@ -728,10 +728,11 @@ While ChoiceScript uses a Markup similar to HTML to bolden or italicise text, Su
 }}}
 \
 <h3>Font, Colour, Size, etc...</h3>\
-While ChoiceScript will let you change the formatting of the text in the StyleSheet, this will only apply to the whole of the game, rather than a small section. SugarCube will let you do both. You can change the overall look of the game in the [[StyleSheet|TODO:]], and specific smaller sections either in-line or in the StyleSheet. For the in-line styling, you can use the following markup:
+While ChoiceScript will let you change the formatting of the text in the StyleSheet, this will only apply to the whole of the game, rather than a small section. SugarCube will let you do both. You can change the overall look of the game in the [[StyleSheet|JS-CSS]], and specific smaller sections either in-line or in the StyleSheet. For the in-line styling, you can use the following markup:
 {{{
     @@style-to-edit;Text@@
         @@color:red;Text@@
+
     <span style="style-to-edit">Text</span>
         <span style="color:red">Text</span>
 
@@ -746,7 +747,7 @@ Among the available [[markup|http://www.motoslave.net/sugarcube/2/docs/#markup-s
 > ''Note:'' for both, the relevant markup character must be placed as ''the first character on the line'' - indented elements will break the styling.
 {{{
     !Header     → <h1>Header</h1>
-    !!!Header   → <h6>Header</h6>
+    !!!!!!Header   → <h6>Header</h6>
 
     * Unordered List
     ** Indented Element
@@ -770,9 +771,9 @@ If you want to add a link to an external page, there isn't really a separate com
  → HTML 
     <a href="https://www.website.com">LinkName</a>
 }}}
-> ''Note:'' if you are creating this link on Twine, a new passage might appear with the link as its name. You will need to delete that new passage, or the player will only see an empty page.
+> ''Note:'' if you are creating this {{{[[link]]}}} on Twine, a new passage might appear with the URL as its name. You will need to delete that new passage, or the player will only see an empty page.
 \
-<h3>Displaying Images<h3>\
+<h3>Displaying Images</h3>\
 Just like ChoiceScript, you can add images to your project. You can use either the SugarCube markup or its HTML counterpart.
 {{{
  → ChoiceScript
@@ -796,7 +797,7 @@ While this isn't possible in ChoiceScript, you can turn an image into a link, ei
 
     <<link "<img src='URL' alt='Atl-Text'>" "URL/PassageName">><</link>>
 }}}
-> ''Note:'' be mindful of the order of quotes ({{{" ' ' "}}} o {{{' " " '}}}), or it can break links.
+> ''Note:'' be mindful of the order of quotes ({{{" ' ' "}}} or {{{' " " '}}}), or it will break the {{{<<link>>}}}.
 \
 <h2>Invisible Comment</h2>\
 Like in ChoiceScript, you can add comments into your code with a special markup. These comments will be invisible to the player (unless they snoop in the code). You can also add comments to your StyleSheet and JavaScript section.
@@ -827,7 +828,7 @@ Here, you will find the other ChoiceScript commands I haven't covered in previou
 <h2>Adding and Playing Audio</h2>\
 SugarCube allows the inclusion of sound files in projects, as well as the manipulation of multiple audio tracks at once. However, unlike ChoiceScript and its singular {{{*sound}}} command, SugarCube needs a bit more of a set-up.
 
-To add sound files to a project, you will need to "cache" them during initialisation, by listing them in the {{{StoryInit}}} [[passage|TODO:]] with the {{{<<cacheaudio>>}}} macro.
+To add sound files to a project, you will need to "cache" them during initialisation, by listing them in the {{{StoryInit}}} [[passage|SpeP]] with the {{{<<cacheaudio>>}}} macro.
 {{{
     :: StoryInit
     <<cacheaudio "trackId" "sourceList">>
@@ -951,7 +952,7 @@ While there aren't specific macros equivalents for {{{*setref}}}, {{{*gotoref}}}
 > ''Note:'' you can use variables in other macros, such as {{{<<goto>>}}} or {{{<<include>>}}}, and even macros requiring non-passage values, like {{{<<timed>>}}}.
 \
 <h2>Adding JavaScript code</h2>\
-There are essentially two ways of introducing JavaScript to your project in SugarCube: directly defined in the [[JavaScript file/passage|TODO:]] or in the passage with the {{{<<run>>}}}/{{{<<script>>}}} macros. The first method will allow you to use is globally in the project (similarly to a [[widget|TODO:]]), with the latter will only be triggered for that particular passage.
+There are essentially two ways of introducing JavaScript to your project in SugarCube: directly defined in the [[JavaScript file/passage|JS-CSS]] or in the passage with the {{{<<run>>}}}/{{{<<script>>}}} macros. The first method will allow you to use is globally in the project (similarly to a [[widget|GoTo]]), with the latter will only be triggered for that particular passage.
 > ''Note:'' knowledge of JavaScript is, of course, required with these macros, since you won't get specific error messages if the added code doesn't work.
 {{{
  → ChoiceScript
@@ -968,7 +969,7 @@ There are essentially two ways of introducing JavaScript to your project in Suga
         <</script>>
 }}}
 > ''Note:'' if you are looking to add JavaScript to your interface (a.k.a in {{{StoryInterface}}}), you will need to use the HTML {{{<script>}}} markup instead of the SugarCube macro.
-> ''Note 2:'' if you are looking to add Accessibility Settings, SugarCube has [[special APIs|TODO:]] to add to your JavaScript. And if you want to switch styling between pages (outside of settings), you should instead use [[Tags|TODO:]].
+> ''Note 2:'' if you are looking to add Accessibility Settings, SugarCube has [[special APIs|Settings]] to add to your JavaScript. And if you want to switch styling between pages (outside of settings), you should instead use [[Tags]].
 \
 <h2>{{{*bug}}} and Debugging</h2>\
 Here again, SugarCube does not have a counterpart for the {{{*bug}}} command, as it is specific to the way conditional statements are coded in ChoiceScript. However, if you are not using {{{<<else>>}}} in your [[conditional statements|IfElse]] (or {{{<<default>>}}} for {{{<<switch>>}}}), you could include it as a "bug" catching option when debugging.

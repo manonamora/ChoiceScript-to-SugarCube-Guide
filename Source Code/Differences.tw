@@ -3,13 +3,16 @@
 Though the end product plays the same, and there are similarities in coding logic, ChoiceScript and Twine are still structured quite differently. And because of those differences, it can be challenging to go from one program to the other.
 
 The first major difference is in how you will code your project. Twine comes with an IDE, which means you can open the program, start a new project, code it, and compile, in one single window. ChoiceScript, on the other hand, does not - requiring a third-party IDE program to code, only handling compiling. As such, ChoiceScript is more comparable to [[Tweego|About]], a Twine-format compiler.
-TODO: Screenshot Twine
+[img[TwineMain]]
+> <small>A screenshot of Twine, with some projects in its Library</small>
 
 Creating a new project in ChoiceScript will require the {{{startup.txt}}} file to be filled accordingly, defining the project's title, listing all scene files to be played, and defining variables. Twine will only require you to input the title of your project, setting up the rest for you (though you //might// need to define //some// [[variables|Variables]]). However, if you are using Tweego, [[some information|Startup]] will need to be manually entered.
-TODO: Screenshot Twine creating new Project
+[img[TwineNew]]
+> <small>A screenshot of Twine, when creating a new project</small>
 
 When you open the project's file setup, ChoiceScript will have multiple scene files ({{{.txt}}}), each containing the code for multiple sections of a scene. On the other hand, Twine will show its singular document in a visual map, displaying the passage as separate blocks of code (editable and moveable). In that regard, ChoiceScript is once again more comparable to Tweego, which lets creators organise their passages into separate Twee files ({{{.tw}}}), as they see fit and in whatever order (as long as the [[Twee Notation|TwineOrTwee]] is being respected).
-TODO: Screenshot Twine project open
+[img[TwineMap]]
+> <small>A screenshot of this Guide's passage map, when imported on Twine</small>
 {{{
  → ChoiceScript
     Lorem Ipsum
